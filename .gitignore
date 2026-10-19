@@ -1,0 +1,12 @@
+# Publish only the website and repository instructions from this project folder.
+/*
+!/.gitignore
+!/README.md
+!/website/
+
+# Local machine and tooling files.
+.DS_Store
+node_modules/
+.env
+.env.*
+*.log

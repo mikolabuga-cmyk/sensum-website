@@ -1,0 +1,81 @@
+/* Sensum foundations. Semantic roles preserve the approved homepage palette. */
+:root {
+  --color-canvas: #f7f6f3;
+  --color-section: #faf9f6;
+  --color-surface: #ffffff;
+  --color-text: #1a2530;
+  --color-text-secondary: #5b676f;
+  --color-text-support: #17283b;
+  --color-border: #d5dce2;
+  --color-accent: #405d78;
+  --color-accent-soft: #aebed2;
+  --color-accent-wash: #e8eef5;
+  --color-image-placeholder: #e7e6e1;
+
+  --font-display: "Google Sans", Arial, sans-serif;
+  --font-body: "Google Sans", Arial, sans-serif;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --type-heading-size: 56px;
+  --type-heading-leading: 1.08;
+  --type-heading-tracking: -.045em;
+  --type-statement-size: 56px;
+  --type-statement-leading: 1.25;
+  --type-statement-tracking: -.045em;
+  --type-narrative-size: 56px;
+  --type-narrative-leading: 72px;
+  --type-narrative-tracking: -.62px;
+  --type-title-size: clamp(22px, 1.85vw, 28px);
+  --type-title-leading: 1.2;
+  --type-title-tracking: -.035em;
+  --type-body-size: clamp(16px, 1.5vw, 20px);
+  --type-body-leading: 1.45;
+  --type-label-size: 14px;
+  --type-heading-size-mobile: 36px;
+  --type-statement-size-mobile: clamp(30px, 6.8vw, 48px);
+  --type-narrative-size-mobile: 28px;
+  --type-narrative-leading-mobile: 36px;
+  --type-body-size-mobile: 15px;
+
+  --motion-duration-feedback: 220ms;
+  --motion-duration-preview: 750ms;
+  --motion-duration-atmosphere: var(--motion-duration-preview);
+  --motion-preview-edge-blur: 11px;
+  --motion-ease-feedback: ease-out;
+  --motion-ease-out: cubic-bezier(.22, 1, .36, 1);
+  --motion-letter-blur: 5px;
+  --motion-letter-lift: .3em;
+  --interaction-muted-opacity: .4;
+  --radius-preview: 24px;
+
+  /* Compatibility aliases used by existing sections. */
+  --canvas: var(--color-canvas);
+  --surface: var(--color-surface);
+  --story-background: var(--color-section);
+  --ink: var(--color-text);
+  --muted: var(--color-text-support);
+  --border: var(--color-border);
+  --mist-blue: var(--color-accent-soft);
+  --blue-wash: var(--color-accent-wash);
+  --deep-blue: var(--color-accent);
+}
+
+/* Opt-in recipes for future sections; no layout or margin side effects. */
+.type-heading, .type-statement, .type-narrative, .type-title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-medium);
+}
+.type-heading { font-size: var(--type-heading-size); line-height: var(--type-heading-leading); letter-spacing: var(--type-heading-tracking); }
+.type-statement { font-size: var(--type-statement-size); line-height: var(--type-statement-leading); letter-spacing: var(--type-statement-tracking); text-wrap: balance; }
+.type-narrative { font-size: var(--type-narrative-size); line-height: var(--type-narrative-leading); letter-spacing: var(--type-narrative-tracking); text-wrap: balance; }
+.type-title { font-size: var(--type-title-size); line-height: var(--type-title-leading); letter-spacing: var(--type-title-tracking); }
+.type-body { font: var(--weight-regular) var(--type-body-size)/var(--type-body-leading) var(--font-body); }
+.type-label { font: var(--weight-regular) var(--type-label-size)/1.4 var(--font-body); }
+@media (max-width: 767px) {
+  .type-heading { font-size: var(--type-heading-size-mobile); }
+  .type-body { font-size: var(--type-body-size-mobile); }
+}
+@media (max-width: 760px) {
+  .type-statement { font-size: var(--type-statement-size-mobile); }
+  .type-narrative { font-size: var(--type-narrative-size-mobile); line-height: var(--type-narrative-leading-mobile); }
+}

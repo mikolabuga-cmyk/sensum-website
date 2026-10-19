@@ -1,0 +1,21 @@
+/* One letter treatment for narrative, story messages and section headings. */
+.point-of-view__word, .point-of-view__char,
+.photo-story__word, .photo-story__char,
+.portfolio-heading__word, .portfolio-heading__char,
+.text-reveal__word, .text-reveal__char { display: inline-block; }
+.point-of-view__word, .photo-story__word, .portfolio-heading__word,
+.text-reveal__word { white-space: nowrap; }
+.point-of-view[data-reveal="active"] .point-of-view__char,
+.photo-story[data-motion="active"] .photo-story__char,
+#work-heading[data-reveal="active"] .portfolio-heading__char,
+[data-reveal="active"] .text-reveal__char {
+  opacity: var(--reveal, 1);
+  filter: blur(calc((1 - var(--reveal, 1)) * var(--motion-letter-blur)));
+  transform: translateY(calc((1 - var(--reveal, 1)) * var(--motion-letter-lift)));
+}
+@media (prefers-reduced-motion: reduce), (forced-colors: active), print {
+  .point-of-view[data-reveal="active"] .point-of-view__char,
+  .photo-story[data-motion="active"] .photo-story__char,
+  #work-heading[data-reveal="active"] .portfolio-heading__char,
+  [data-reveal="active"] .text-reveal__char { opacity: 1; filter: none; transform: none; }
+}

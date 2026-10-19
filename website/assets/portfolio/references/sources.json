@@ -1,0 +1,62 @@
+[
+  {
+    "id": "ibm",
+    "title": "IBM watsonx Orchestrate",
+    "subtitle": "Translating complex technologies into human experiences",
+    "studio": "Accept & Proceed",
+    "url": "https://www.acceptandproceed.com/work/ibm-watsonx-orchestrate",
+    "alt": "IBM interactive exhibition with blue light and digital displays.",
+    "wide": true,
+    "imageSource": "https://cdn.prod.website-files.com/6655bf70239fd3009a6d75ed/6a0d8c2ecf7a236bbed5b2a5_01_IBM_Land_Hero-p-1600.jpg"
+  },
+  {
+    "id": "seed",
+    "title": "Seed",
+    "subtitle": "Awakening a new world of abundant life.",
+    "studio": "Mouthwash Studio",
+    "url": "https://mouthwash.studio/project/seed/",
+    "alt": "Seed multivitamin packaging in translucent green glass.",
+    "wide": false,
+    "imageSource": "https://cdn.sanity.io/images/ew1yzffi/production/8e235099308c24e3ebe8bb1c14afdf90e5f39ede-1200x1366.png?w=900&q=85&fm=jpg"
+  },
+  {
+    "id": "nova",
+    "title": "Nova",
+    "subtitle": "Clean product interface designed to simplify complex digital interactions.",
+    "studio": "Orionix",
+    "url": "https://orionix.framer.website/works/nova",
+    "alt": "Winter sports ecommerce interface and visual identity presented on a grey background.",
+    "wide": false,
+    "imageSource": "https://framerusercontent.com/images/ind1PlF3TzvEwZPVFv8zsijQBG0.png?width=832&height=1104"
+  },
+  {
+    "id": "cashee",
+    "title": "Cashee",
+    "subtitle": "Teen banking for the MENA region",
+    "studio": "The Gradient",
+    "url": "https://thegradient.com/work/cashee",
+    "alt": "Cashee mobile banking app beside a game controller on a bright blue background.",
+    "wide": true,
+    "imageSource": "https://cdn.sanity.io/images/2jhs0q6n/production/577ec6db83769999a7bffb314c48a80a8320977b-3840x2160.png?w=1600&q=85&fm=jpg"
+  },
+  {
+    "id": "bloxfi",
+    "title": "BloxFi",
+    "subtitle": "Global API for currency conversion and settlement",
+    "studio": "Figmatica",
+    "url": "https://figmatica.com/cases/bloxfi",
+    "alt": "BloxFi financial website on a laptop surrounded by a rocky landscape.",
+    "wide": true,
+    "imageSource": "https://figmatica.com/assets/featured/bloxfi.webp"
+  },
+  {
+    "id": "epfl",
+    "title": "EPFL",
+    "subtitle": "Making space for mental health",
+    "studio": "TWKS",
+    "url": "https://twks.ch/en/projects/epfl-health-days",
+    "alt": "Colourful illustrated cards for EPFL’s mental health campaign.",
+    "wide": false,
+    "imageSource": "https://twks.ch/en/img/asset/cHJvamVjdHMvZXBmbC1qb3Vycy1zYW50ZS9tY2tfZXBmbF9jYXJkcy5qcGc/mck_epfl_cards.jpg?p=third_fallback_2x&s=6d804e57a1f541e3e3d0d53367f3cb84"
+  }
+]
