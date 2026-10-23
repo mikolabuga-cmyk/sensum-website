@@ -17,17 +17,16 @@
     document.dispatchEvent(new CustomEvent('hero-dots-change'));
   });
   const key = 'sensum-hero-palette';
-  let saved;
-  try { saved = localStorage.getItem(key); } catch { /* Storage may be disabled. */ }
   function select(palette) {
     root.dataset.heroVariant = 'frosted';
     root.dataset.heroGraphic = 'particles';
-    root.dataset.heroPalette = ['original', 'pastel'].includes(palette) ? palette : 'pastel';
+    root.dataset.heroPalette = ['original', 'pastel'].includes(palette) ? palette : 'original';
     buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.variant === root.dataset.heroPalette)));
     try { localStorage.setItem(key, root.dataset.heroPalette); } catch { /* Selection still works for this view. */ }
     syncDots();
   }
   buttons.forEach(button => button.addEventListener('click', () => select(button.dataset.variant)));
-  select(saved);
+  // Match the initial HTML: an old comparison choice must not flash color on load.
+  select('original');
   switcher.hidden = true;
 })();

@@ -79,3 +79,11 @@ To add a reveal, follow `portfolio-heading.js`: check reduced motion, forced col
 Change a semantic token when changing a role across the site. Change a component style when changing only that component. Preserve the accessible copy, static fallback, responsive layout, and scroll reversal when extending motion. Keep scene-specific sequencing separate from the shared letter renderer.
 
 Validation: `node --test website/tests/*.cjs` from the project root.
+
+## Services: text-only editorial rows
+
+Five full-width near-black (`#080808`) rows show the approved outcome title on the left and its exact description on the right. Serif titles, muted `#a0a0a0` descriptions, and thin `#303030` dividers preserve the editorial direction. A left-aligned “What we do” heading sits inside the dark section above the first divider. There are no disclosures or capability lists. On desktop hover or keyboard focus, rows expand from 300px to 420px over 650ms, shift to #181818, and reveal a decorative placeholder image in the centre. Reduced motion disables transitions; narrow layouts omit the preview. On mobile, each description stacks below its title. All content is available through ordinary scrolling without JavaScript.
+
+The full header gains a 26px backdrop blur after 24px of scroll, matching the Phantom reference’s full-width treatment. Its mask fades from opaque to 60% at 75% height and then transparent at the bottom, extending 8px below the header. Entry/exit uses a 300ms opacity transition, disabled for reduced motion. Navigation links sit directly over the full-width blur, without a pill background, border, or separate backdrop filter. Scroll-direction behavior remains. Browsers without backdrop filtering use a warm-white fade; forced colors use Canvas. Sections marked `data-header-theme="dark"` switch the logo, links, dot icons, Contact, and mobile menu control to off-white when they cross the header midpoint. Light sections restore ink text. Dropdown panels retain their light styling, and the blur fallback becomes charcoal over dark sections.
+
+The service section ends with five capability columns on desktop, each with a 16px service name, short divider, and muted 16px capability list. Below 900px the overview uses two columns; below 480px it stacks into one.

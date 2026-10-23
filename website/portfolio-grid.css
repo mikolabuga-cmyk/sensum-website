@@ -193,3 +193,8 @@
 @media (prefers-reduced-motion: reduce), (forced-colors: active), print {
   .portfolio-project__preview::after, .portfolio-project__dots { display: none; }
 }
+
+/* Preserve the full mobile flows inside the existing preview proportions. */
+.portfolio-project__preview img.portfolio-project__screen-preview { object-fit: contain; }
+.portfolio-project__screen-preview--cashee { background: #171716; }
+.portfolio-project__screen-preview--seed { background: #dce5d3; }

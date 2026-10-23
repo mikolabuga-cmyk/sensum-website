@@ -5,9 +5,10 @@
     "subtitle": "Translating complex technologies into human experiences",
     "studio": "Accept & Proceed",
     "url": "https://www.acceptandproceed.com/work/ibm-watsonx-orchestrate",
-    "alt": "IBM interactive exhibition with blue light and digital displays.",
+    "alt": "IBM watsonx Orchestrate interface states showing the AI agent lifecycle and workflow controls.",
     "wide": true,
-    "imageSource": "https://cdn.prod.website-files.com/6655bf70239fd3009a6d75ed/6a0d8c2ecf7a236bbed5b2a5_01_IBM_Land_Hero-p-1600.jpg"
+    "imageSource": "https://cdn.prod.website-files.com/6655bf70239fd3009a6d75ed/6a0daf1f267540ef70cbd007_03_IBM_Land_UI_States-p-1600.jpg",
+    "previewUpdated": "2026-10-19"
   },
   {
     "id": "seed",
@@ -15,9 +16,10 @@
     "subtitle": "Awakening a new world of abundant life.",
     "studio": "Mouthwash Studio",
     "url": "https://mouthwash.studio/project/seed/",
-    "alt": "Seed multivitamin packaging in translucent green glass.",
+    "alt": "Seed mobile product page with navigation, product details, and a purchase action.",
     "wide": false,
-    "imageSource": "https://cdn.sanity.io/images/ew1yzffi/production/8e235099308c24e3ebe8bb1c14afdf90e5f39ede-1200x1366.png?w=900&q=85&fm=jpg"
+    "imageSource": "https://cdn.sanity.io/images/ew1yzffi/production/807ba910a78dcb91fabb48acf5f0ff96b4b3a1bb-2823x2719.png?w=1600&q=85&fm=jpg",
+    "previewUpdated": "2026-10-19"
   },
   {
     "id": "nova",
@@ -25,9 +27,10 @@
     "subtitle": "Clean product interface designed to simplify complex digital interactions.",
     "studio": "Orionix",
     "url": "https://orionix.framer.website/works/nova",
-    "alt": "Winter sports ecommerce interface and visual identity presented on a grey background.",
+    "alt": "Desktop product dashboard and mobile profile interface shown side by side.",
     "wide": false,
-    "imageSource": "https://framerusercontent.com/images/ind1PlF3TzvEwZPVFv8zsijQBG0.png?width=832&height=1104"
+    "imageSource": "https://framerusercontent.com/images/48hbVcm3BiSd776S7TvaXbmpxo.jpg",
+    "previewUpdated": "2026-10-19"
   },
   {
     "id": "cashee",
@@ -35,9 +38,10 @@
     "subtitle": "Teen banking for the MENA region",
     "studio": "The Gradient",
     "url": "https://thegradient.com/work/cashee",
-    "alt": "Cashee mobile banking app beside a game controller on a bright blue background.",
+    "alt": "Three Cashee app screens for creating a reward, setting a deadline, and paying a completed challenge.",
     "wide": true,
-    "imageSource": "https://cdn.sanity.io/images/2jhs0q6n/production/577ec6db83769999a7bffb314c48a80a8320977b-3840x2160.png?w=1600&q=85&fm=jpg"
+    "imageSource": "https://cdn.sanity.io/images/2jhs0q6n/production/96fa03a40fc3cc6cdd5c168794bd291f21273e5f-3840x2400.png?w=1600&q=85&fm=jpg",
+    "previewUpdated": "2026-10-19"
   },
   {
     "id": "bloxfi",
@@ -55,7 +59,7 @@
     "subtitle": "Making space for mental health",
     "studio": "TWKS",
     "url": "https://twks.ch/en/projects/epfl-health-days",
-    "alt": "Colourful illustrated cards for EPFL’s mental health campaign.",
+    "alt": "Colourful illustrated cards for EPFL\u2019s mental health campaign.",
     "wide": false,
     "imageSource": "https://twks.ch/en/img/asset/cHJvamVjdHMvZXBmbC1qb3Vycy1zYW50ZS9tY2tfZXBmbF9jYXJkcy5qcGc/mck_epfl_cards.jpg?p=third_fallback_2x&s=6d804e57a1f541e3e3d0d53367f3cb84"
   }

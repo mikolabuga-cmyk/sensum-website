@@ -23,6 +23,13 @@ toggle.addEventListener('click', () => {
   setNavigation(toggle.getAttribute('aria-expanded') !== 'true');
 });
 
+navigation.addEventListener('click', event => {
+  if (event.target.closest('a[href^="#"]') && mobile.matches) {
+    setNavigation(false);
+    toggle.focus({ preventScroll: true });
+  }
+});
+
 document.addEventListener('click', event => {
   if (!navigation.contains(event.target) && !toggle.contains(event.target)) {
     if (mobile.matches) setNavigation(false);

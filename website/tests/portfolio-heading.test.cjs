@@ -7,10 +7,10 @@ function setup(reduced = false) {
   const chars = [], events = {}, queue = new Map();
   let top = 950, time = 0, id = 0, mutation;
   const element = () => ({ dataset: {}, children: [], append(child) { this.children.push(child); }, setAttribute() {}, style: { setProperty(key, value) { this[key] = value; } } });
-  const heading = Object.assign(element(), { textContent: 'Selected works', getBoundingClientRect: () => ({ top }), replaceChildren(...children) { this.children = children; } });
+  const heading = Object.assign(element(), { id: 'work-heading', textContent: 'Selected works', getBoundingClientRect: () => ({ top }), replaceChildren(...children) { this.children = children; } });
   const control = element();
   vm.runInNewContext(source, {
-    document: { hidden: false, querySelector: s => s === '#work-heading' ? heading : control, createTextNode: text => ({ textContent: text }), createElement: () => { const el = element(); chars.push(el); return el; }, addEventListener() {} },
+    document: { hidden: false, querySelectorAll: () => [heading], querySelector: s => s === '#work-heading' ? heading : control, createTextNode: text => ({ textContent: text }), createElement: () => { const el = element(); chars.push(el); return el; }, addEventListener() {} },
     window: { addEventListener: (name, fn) => { events[name] = fn; } },
     innerHeight: 1000,
     matchMedia: query => ({ matches: query.includes('reduced') && reduced, addEventListener() {} }),
@@ -30,7 +30,7 @@ test('heading reveals overlapping letters in reading order over a short entrance
   assert.ok(values().every(v => v > 0 && v < 1));
   assert.ok(new Set(values()).size > 1);
   assert.ok(values().every((value, index, all) => !index || value < all[index - 1]));
-  h.scroll(720);
+  h.scroll(660);
   assert.ok(values().every(v => v === 1));
   h.scroll(950);
   assert.ok(values().every(v => v === 0));

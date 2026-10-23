@@ -1,5 +1,5 @@
 (() => {
-  const section = document.querySelector('.point-of-view');
+  document.querySelectorAll('.point-of-view, [data-narrative-reveal]').forEach(section => {
   if (!section || section.hidden) return;
 
   const motion = window.SensumTextMotion;
@@ -14,7 +14,7 @@
   const chapters = [...opening, ...(closing && !closing.hidden ? [closing] : [])].map(element => {
     const isClosing = element === closing;
     const paragraph = element.querySelector(isClosing ? 'h2' : '.point-of-view__text');
-    const chars = motion.split(paragraph, 'point-of-view');
+    const chars = motion.split(paragraph, section.hasAttribute('data-narrative-reveal') ? 'text-reveal' : 'point-of-view');
     return { element, stage: isClosing ? element : element.querySelector('.point-of-view__stage'), chars, current: null, isClosing };
   });
 
@@ -103,4 +103,5 @@
   }
   document.fonts?.ready.then(measure);
   sync();
+  });
 })();

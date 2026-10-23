@@ -1,6 +1,8 @@
 (() => {
   const header = document.querySelector('.header-chrome');
   if (!header) return;
+  const darkSections = [...document.querySelectorAll('[data-header-theme="dark"]')];
+  const headerContent = header.querySelector('.site-header');
   let previousY = Math.max(0, window.scrollY);
   let distance = 0;
   let direction = 0;
@@ -15,6 +17,12 @@
     const delta = y - previousY;
     previousY = y;
     header.dataset.scrolled = String(y > 24);
+    // Measure the resting header, independent of its hide-on-scroll transform.
+    const headerMidpoint = (headerContent?.offsetHeight || 96) / 2;
+    header.dataset.theme = darkSections.some(section => {
+      const bounds = section.getBoundingClientRect();
+      return bounds.top <= headerMidpoint && bounds.bottom > headerMidpoint;
+    }) ? 'dark' : 'light';
     if (y < 96 || isEngaged()) {
       show(); distance = 0; direction = 0; return;
     }

@@ -1,0 +1,50 @@
+.team-portrait { position: relative; display: grid; grid-template-columns: 25% 50% 25%; align-items: center; min-height: 100svh; padding: 64px var(--gutter); background: #080808; color: #f3f3ef; overflow: hidden; }
+.team-portrait__copy { max-width: 300px; position: relative; z-index: 1; align-self: start; padding-top: clamp(36px,7svh,72px); }
+.team-portrait__copy h2 { margin: 0 0 12px; font-family: var(--font-display); font-size: clamp(40px,5vw,72px); font-weight: 400; letter-spacing: -.045em; line-height: 1.08; }
+.team-portrait__copy p { margin: 0; font-size: 16px; line-height: 1.5; color: #b8b8b5; }
+.particle-portrait { position: relative; width: 100%; height: clamp(440px,calc(100svh - 128px),900px); }
+.particle-portrait canvas { position: absolute; inset: 0; width: 100%; height: 100%; display:block; opacity: 0; transition: none; }
+.particle-portrait__fallback { width: 100%; height: 100%; object-fit: contain; opacity: .65; transition: none; }
+.particle-portrait[data-status='ready'] canvas { opacity: 1; }
+.particle-portrait[data-status='ready'] .particle-portrait__fallback { opacity: 0; }
+ .team-portrait__copy .team-portrait__description { margin-top: 28px; width: 120%; max-width: 33.6ch; color: #999; line-height: 1.65; }
+.team-portrait__switcher { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 24px; }
+.team-portrait__switcher button { border: 0; background: none; color: #777; padding: 4px 0; min-height: 44px; font: inherit; font-size: clamp(28px,3.4vw,54px); line-height: 1.15; letter-spacing: -.045em; cursor: pointer; transition: color 250ms ease; }
+.team-portrait__switcher button:hover { color: #c6c6c6; }
+.team-portrait__switcher button[aria-pressed='true'] { color: #fff; }
+.team-portrait__switcher button:focus-visible { outline: 1px solid #fff; outline-offset: 6px; border-radius: 2px; }
+@media(max-width:760px){
+ .team-portrait__switcher { grid-row: 1; flex-direction: row; flex-wrap: wrap; gap: 24px; padding: 0; margin-bottom: 32px; }
+ .team-portrait__switcher button { font-size: 24px; }
+ .team-portrait__copy { grid-row: 3; max-width: 100%; }
+ .team-portrait__copy .team-portrait__description { width: 100%; max-width: 40ch; }
+
+ .team-portrait { grid-template-columns: 1fr; min-height: 0; padding-block: 56px 20px; }
+ .particle-portrait { height: min(130vw,650px); }
+ .team-portrait__copy h2 { font-size: 40px; }
+}
+@media(prefers-reduced-motion:reduce){.particle-portrait canvas,.particle-portrait__fallback {transition:none;}}
+
+
+
+.team-portrait__copy .team-portrait__role { color: #fff; display: flex; align-items: center; gap: 9px; font-size: 14px; line-height: 1.4; }
+.team-portrait__role::before { content: ''; width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: #fff; }
+.team-portrait__copy .team-portrait__experience { margin-top: 6px; font-size: 12px; letter-spacing: .055em; color: #999; line-height: 1.5; }
+@media(max-width:760px){ .team-portrait__copy { padding-top: 0; } }
+
+/* Keep the source-photo fallback hidden while WebGL initializes. */
+.particle-portrait__fallback { visibility: hidden; }
+.particle-portrait[data-status='fallback'] .particle-portrait__fallback { visibility: visible; }
+
+.team-intro { display: grid; place-items: center; min-height: 85svh; padding: clamp(96px,14svh,180px) var(--gutter); background: #080808; color: #f3f3ef; }
+.team-intro h2 { width: 100%; max-width: 1040px; margin: 0 auto; text-align: center; font-family: var(--font-display); font-size: var(--type-narrative-size); font-weight: 500; line-height: var(--type-narrative-leading); letter-spacing: var(--type-narrative-tracking); }
+@media(max-width:760px){ .team-intro { min-height: auto; padding: 96px 24px; } .team-intro h2 { font-size: var(--type-narrative-size-mobile); line-height: var(--type-narrative-leading-mobile); } }
+
+/* Match the opening point-of-view chapter's scroll distance and sticky hold. */
+.team-intro { display: block; min-height: 0; padding: 0; }
+.team-intro[data-reveal="active"] .point-of-view__chapter { min-height: calc(var(--reading-height, 85svh) + 25svh); }
+.team-intro[data-reveal="active"] .point-of-view__stage { position: sticky; top: 0; }
+@media(prefers-reduced-motion:reduce), (forced-colors:active) {
+ .team-intro[data-reveal] .point-of-view__chapter { min-height: auto; }
+ .team-intro[data-reveal] .point-of-view__stage { position: static; }
+}

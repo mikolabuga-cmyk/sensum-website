@@ -1,12 +1,15 @@
 (() => {
-  const heading = document.querySelector('#work-heading');
-  if (!heading) return;
+  document.querySelectorAll('#work-heading, [data-scroll-heading]').forEach(heading => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const forced = matchMedia('(forced-colors: active)');
   const control = document.querySelector('.motion-toggle');
   const motion = window.SensumTextMotion;
   if (!motion) return;
-  const chars = motion.split(heading, 'portfolio-heading');
+  const chars = motion.split(heading, heading.id === 'work-heading' ? 'portfolio-heading' : 'text-reveal');
+  const baseProfile = heading.dataset.scrollHeading === 'narrative' ? motion.tokens : motion.tokens.heading;
+  const profile = ['work-heading', 'services-heading'].includes(heading.id)
+    ? { ...baseProfile, viewportSpan: baseProfile.viewportSpan / .75 }
+    : baseProfile;
   let frame = 0, current = null, lastTime = 0;
   const enabled = () => !reduced.matches && !forced.matches && control?.dataset.paused !== 'true';
   function render(time) {
@@ -17,13 +20,13 @@
       lastTime = 0;
       return;
     }
-    const target = motion.viewportProgress(heading.getBoundingClientRect().top, innerHeight, motion.tokens.heading);
-    const ease = motion.damping(time, lastTime, motion.tokens.heading.dampingMs);
+    const target = motion.viewportProgress(heading.getBoundingClientRect().top, innerHeight, profile);
+    const ease = motion.damping(time, lastTime, profile.dampingMs);
     current = current === null ? target : current + (target - current) * ease;
     if (Math.abs(target - current) < .0001) current = target;
     heading.dataset.reveal = 'active';
     // Closely overlapping letters sweep into focus over a short scroll distance.
-    motion.paint(chars, current, motion.tokens.heading.feather);
+    motion.paint(chars, current, profile.feather);
     if (current !== target) {
       lastTime = time;
       frame = requestAnimationFrame(render);
@@ -46,4 +49,5 @@
     } else schedule();
   });
   schedule();
+  });
 })();

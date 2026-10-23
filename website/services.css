@@ -1,0 +1,87 @@
+/* Editorial service rows with a decorative hover preview. */
+.services-stack {
+  --services-ink: #f3f3ef;
+  --services-muted: #a0a0a0;
+  margin: 0; padding: 0; color: var(--services-ink); background: #080808;
+  color-scheme: dark; scroll-margin-top: 96px;
+}
+.services-header { padding: 44px var(--gutter); }
+.services-header h2 { margin: 0; font-weight: 400; color: var(--services-ink); }
+.service-panel { border-top: 1px solid #303030; scroll-margin-top: 96px; transition: background-color 600ms ease; }
+.service-panel:focus-visible { outline: 2px solid var(--services-ink); outline-offset: -3px; }
+.service-panel:last-child { border-bottom: 1px solid #303030; }
+.service-panel__inner {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: end; gap: clamp(48px, 12vw, 240px);
+  min-height: 300px; padding: 56px var(--gutter);
+  transition: min-height 650ms cubic-bezier(.22, 1, .36, 1);
+}
+.service-panel__preview {
+  position: absolute; left: 45%; bottom: 56px; width: 17%; height: auto; aspect-ratio: 4 / 3;
+  object-fit: cover; pointer-events: none; opacity: 0;
+  transform: translateY(18px) scale(.92); transform-origin: center bottom;
+  transition: opacity 450ms ease, transform 650ms cubic-bezier(.22, 1, .36, 1);
+}
+@media (min-width: 761px) {
+  .service-panel:focus-visible { background: #181818; }
+  .service-panel:focus-visible .service-panel__inner { min-height: 420px; }
+  .service-panel:focus-visible .service-panel__preview { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (min-width: 761px) and (hover: hover) and (pointer: fine) {
+  .service-panel:hover { background: #181818; }
+  .service-panel:hover .service-panel__inner { min-height: 420px; }
+  .service-panel:hover .service-panel__preview { opacity: 1; transform: translateY(0) scale(1); }
+}
+.service-panel h3 {
+  margin: 0; max-width: 20ch; font-family: var(--font-display);
+  font-weight: 400; font-size: clamp(32px, 3.4vw, 54px);
+  line-height: 1.12; letter-spacing: -.035em; text-wrap: balance; color: var(--services-ink);
+}
+.service-panel__description {
+  margin: 0; width: 80%; max-width: 41.6ch; justify-self: end;
+  font-size: 16px; line-height: 1.55; color: var(--services-muted);
+}
+@media (max-width: 760px) {
+  .service-panel__preview { display: none; }
+  .services-header { padding-block: 32px; }
+  .service-panel__inner { grid-template-columns: 1fr; gap: 24px; min-height: 0; padding-block: 40px; }
+  .service-panel h3 { font-size: 32px; }
+  .service-panel__description { justify-self: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-panel, .service-panel__inner, .service-panel__preview { transition: none; }
+}
+@media (forced-colors: active) {
+  .services-stack { --services-ink: CanvasText; --services-muted: CanvasText; background: Canvas; }
+  .service-panel { border-color: CanvasText; }
+}
+@media print {
+  .services-stack { --services-ink: black; --services-muted: black; background: white; }
+  .service-panel { break-inside: avoid; }
+}
+
+/* Capability overview continues the dark section beneath the editorial rows. */
+.service-capabilities {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 56px); padding: 120px var(--gutter) 140px;
+}
+.service-capabilities__column { min-width: 0; }
+.service-capabilities h3 {
+  margin: 0; min-height: 48px; font-family: var(--font-body);
+  font-size: 16px; font-weight: 500; line-height: 1.5; color: var(--services-ink);
+}
+.service-capabilities h3::after { content: ''; display: block; width: 24px; height: 1px; margin-top: 20px; background: #3a3a3a; }
+.service-capabilities ul { display: grid; gap: 16px; margin: 20px 0 0; padding: 0; list-style: none; }
+.service-capabilities li { font-size: 16px; line-height: 1.5; color: var(--services-muted); }
+@media (max-width: 900px) {
+  .service-capabilities { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px 32px; padding-block: 72px; }
+}
+@media (max-width: 480px) {
+  .service-capabilities { grid-template-columns: 1fr; }
+}
+
+.service-panel__preview--orb { left: 44.15%; width: 18.7%; aspect-ratio: 1; color: var(--services-ink); }
+#service-clarity .service-panel__preview--orb { left: 43.215%; width: 20.57%; }
+.service-orb__visual { display: block; width: 100%; height: auto; }
+
+#service-ai .service-panel__preview--orb { left: 42.28%; width: 22.44%; }
