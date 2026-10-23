@@ -3,6 +3,7 @@
 !/.gitignore
 !/README.md
 !/website/
+!/.github/
 
 # Local machine and tooling files.
 .DS_Store
