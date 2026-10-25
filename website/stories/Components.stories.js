@@ -1,0 +1,13 @@
+import {frame,controls} from './frame';
+export default {title:'Components',args:{width:'100%',height:700},argTypes:controls};
+export const Navigation={render:args=>frame('previews/navigation',args)};
+export const NavigationDark={render:args=>frame('previews/navigation-dark',args)};
+export const PrimaryButton={render:args=>frame('previews/primary-button',args)};
+export const ContactButton={render:args=>frame('previews/contact-button',args)};
+export const WorkCard={render:args=>frame('previews/work-card-0',args)};
+export const ProductClarityService={render:args=>frame('previews/service-clarity',args)};
+export const MvpService={render:args=>frame('previews/service-design',args)};
+export const RescueService={render:args=>frame('previews/service-evolution',args)};
+export const AiService={render:args=>frame('previews/service-ai',args)};
+export const Capabilities={render:args=>frame('previews/capabilities',args)};
+export const TeamSwitcher={render:args=>frame('previews/team-switcher',args)};

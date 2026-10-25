@@ -1,89 +1,187 @@
-# Sensum design foundations
+# Sensum design system
 
-These foundations capture the approved homepage, rather than introduce a new visual direction. They are the starting point for future sections. The hero’s special effects and scene choreography remain component-specific.
+This system records the approved website. Its purpose is to make future work consistent without redesigning the existing experience. Current user-approved choices take precedence over older brand references: Google Sans is the functional family, and the services and team chapters intentionally use dark surfaces.
 
-## Sources of truth
+## Source of truth
 
-- `design-tokens.css`: semantic colors, typography, feedback motion, image radius, and opt-in type recipes.
-- `text-motion.js`: shared character splitting, progress mapping, easing, and rendering.
-- `text-motion.css`: one letter opacity, blur, and lift treatment with readable reduced-motion, forced-color, and print fallbacks.
-- `styles.css`: layout rails and component styles.
+| Source | Responsibility |
+| --- | --- |
+| `components/*.html` | Authoritative HTML partials, assembled from `components/page.html` |
+| `tools/build-components.mjs` | Generates `index.html` and `design-system/previews/*.html` |
+| `stories/*.stories.js` / `.storybook/` | HTML/Vite Storybook stories and configuration |
+| `design-system/guide.html`, `guide.css`, `guide.js` | Public visual guide; color and space swatches read live token source |
+| `design-tokens.css` | Shared color, typography, spatial and interaction roles; opt-in typography recipes |
+| `styles.css` | Base font loading, page rails, navigation, hero, narrative and photo-story layout |
+| `portfolio-grid.css` | Work-card geometry, hover treatment and responsive portfolio layout |
+| `services.css` | Editorial service rows, capability columns and decorative orb frames |
+| `particle-portrait.css` | Team introduction, biography, portrait and member selector |
+| `text-motion.js` / `text-motion.css` | Shared letter splitting, progress mapping, easing and visual reveal |
+| `portfolio-heading.js` | Short-heading scroll profile for work and services |
+| `text-reveal.js` | Narrative and team-statement sticky reading behavior |
+| `services-orb.js` / `particle-portrait.js` | Scene-specific shape and portrait rendering |
 
-Load tokens and text motion CSS before component CSS. Load `text-motion.js` with `defer` before scripts that consume it. Existing short color variables (`--ink`, `--canvas`, etc.) alias semantic tokens; new components can use the semantic names directly.
+The component and section stories must use the production source, styles and assets. A story is a view of a component, not an independent recreation. Generated pages are outputs; edit their shared source and rebuild. Storybook exposes the implementation for review; this document records its intended contract. Actual CSS and JavaScript remain authoritative for values.
+
+## Color and visual foundations
+
+### Light roles
+
+| Token | Value | Intended use |
+| --- | --- | --- |
+| `--color-canvas` | `#f7f6f3` | Warm page foundation |
+| `--color-section` | `#faf9f6` | Narrative and work sections |
+| `--color-surface` | `#ffffff` | White surfaces |
+| `--color-text` | `#1a2530` | Primary ink |
+| `--color-text-secondary` | `#5b676f` | Secondary work copy |
+| `--color-text-support` | `#17283b` | Hero supporting copy |
+| `--color-border` | `#d5dce2` | Quiet light-surface boundaries |
+| `--color-accent` | `#405d78` | Focus and interaction accent |
+| `--color-accent-soft` | `#aebed2` | Soft selection color |
+| `--color-accent-wash` | `#e8eef5` | Light accent wash |
+| `--color-image-placeholder` | `#e7e6e1` | Media loading background |
+
+Legacy variables such as `--ink`, `--canvas`, `--gutter`, and `--deep-blue` remain compatibility aliases. New work should consume the semantic source rather than create another sampled near-match.
+
+### Inverse roles
+
+Services and team share a near-black `#080808` canvas and warm off-white `#f3f3ef` content. Service hover uses `#181818`; row boundaries use `#303030`. Services use `#a0a0a0` for supporting copy; team descriptions and experience use `#999`. Team selectors use `#777` inactive, `#c6c6c6` hover and white selected. These differences are intentional component roles, not interchangeable grey swatches.
+
+The primary CTA uses a `#1b1c1e` surface with a bounded spectral light treatment. Product screenshots retain their source colors. Neither the CTA's effect colors nor image colors are new general-purpose brand accents.
+
+One atmospheric treatment should dominate each viewport. Hero particles, portfolio edge grain, service orbs and team portraits are component-specific expressions. Do not combine them on every surface or apply their canvas shaders to text.
 
 ## Typography
 
-Google Sans, locally hosted, is the approved display and body family. Medium is 500; regular is 400. Font size is in CSS pixels, independent of screenshot resolution.
+Google Sans is locally hosted with normal and italic variable font files. Display and body share the family; normal content uses 400, repeated headings commonly use 500, and compact emphasis may use 600. Keep font licenses with distributed assets. Semantic heading level is independent of visual size.
 
-| Role / recipe | Desktop size | Line height | Tracking | Mobile |
-| --- | --- | --- | --- | --- |
-| `.type-heading` | 56px | 1.08 | −.045em | 36px |
-| `.type-statement` | 56px | 1.25 | −.045em | clamp(30px, 6.8vw, 48px) |
-| `.type-narrative` | 56px | 72px | −.62px | 28px / 36px |
-| `.type-title` | clamp(22px, 1.85vw, 28px) | 1.2 | −.035em | Same fluid scale |
-| `.type-body` | clamp(16px, 1.5vw, 20px) | 1.45 | Normal | 15px |
-| `.type-label` | 14px | 1.4 | Normal | 14px |
+| Role | Desktop | Leading / tracking | Narrow layout |
+| --- | --- | --- | --- |
+| Hero | 72px, 500 | 1.1 / −.055em | Follow hero's responsive rules |
+| Section heading | 56px | 1.08 / −.045em | 36px at 767px |
+| Statement | 56px, 500 | 1.25 / −.045em | clamp(30px, 6.8vw, 48px) at 760px |
+| Narrative / team introduction | 56px, 500 | 72px / −.62px | 28px / 36px at 760px |
+| Work title | clamp(22px, 1.85vw, 28px), 500 | 1.2 / −.035em | Fluid scale retained |
+| Service outcome | clamp(32px, 3.4vw, 54px), 400 | 1.12 / −.035em | 32px |
+| Body recipe | clamp(16px, 1.5vw, 20px), 400 | 1.45 | 15px at 767px |
+| Service description | 16px, 400 | 1.55 | 16px retained |
+| Team description | 16px, 400 | 1.65 | 16px retained |
+| Team role | 14px, 400 | 1.4 | Same |
+| Team experience | 12px, uppercase | 1.5 / .055em | Same |
+| Team selector | clamp(28px, 3.4vw, 54px), 400 | 1.15 / −.045em | 24px |
 
-The heading role powers “Selected works”; narrative powers “AI makes it easier…”; statement powers both messages surrounding the Sensum logo. All three are 56px on desktop. Their different leading and tracking are intentional. Existing components consume these tokens directly; recipes provide the same styles for new markup. Recipes do not set margins, alignment, or widths. Keep semantic HTML (`h2`, `p`, etc.) independent of the visual role.
+“Selected works” is medium 500. “What we do” is intentionally regular 400 while using the same heading size and reveal behavior. Do not normalize that approved exception. Narrative and team-introduction typography match exactly. Use `.type-heading`, `.type-statement`, `.type-narrative`, `.type-title`, `.type-body`, and `.type-label` recipes for equivalent new content; they do not own margins or alignment.
 
-Responsive breakpoints preserve the existing layout: headings/body change at 767px, narrative/statements at 760px. Narrative and message width constraints remain in their section layouts.
+## Spacing, layout and shape
 
-```html
-<h2 class="type-heading">Our approach</h2>
-<p class="type-body">A clear next step for your product.</p>
+Use the shared spacing scale for ordinary gaps and padding. Preserve fluid or scene-measured dimensions where geometry matters rather than rounding every existing value to the scale.
+
+- Page content maximum: 1920px.
+- Page margin: `clamp(20px, 3.333333vw, 64px)`; gutter expands beyond the content maximum.
+- Grid gap: `clamp(16px, 2.5vw, 40px)`.
+- Section space: `clamp(72px, 8.333333vw, 160px)`.
+- Work-media radius: 24px; CTA radius: pill; focus corners may be 2px.
+- Service rows: 300px resting minimum, 420px expanded minimum, 56px vertical padding on desktop. Mobile uses normal-flow content and 40px padding.
+- Capability overview: four columns, two below 900px, one below 480px.
+- Team desktop: 25% biography / 50% portrait / 25% selector. Mobile changes reading arrangement and uses one column at 760px.
+- Team biography: top-aligned with the portrait, 16px description; desktop description may extend to 120% of the copy rail, capped at 33.6ch. On mobile use 100% width.
+
+The existing 760px and 767px breakpoints serve different component families. They are compatibility boundaries, not a requirement to invent two different phone sizes for future work. Validate adjacent widths before consolidating them. Intentional full-height scenes use `svh`.
+
+## Component contracts
+
+| Component | Content and behavior | Required review states |
+| --- | --- | --- |
+| Primary CTA | Pill, light label, bounded fluid light; anchor for navigation, button for actions | Rest, hover, pressed, keyboard focus, static/reduced motion |
+| Navigation | Wordmark, dot-matrix links, contact action; full-width scroll blur and dark-section text switch | Light/dark surface, scrolled, menu open/closed, keyboard, mobile |
+| Work card | Image-led link, title and description, 24px media clip | Rest, hover/focus, loading/failure, touch |
+| Service row | Outcome left, exact description right; bottom-aligned; decorative center orb on desktop hover/focus | Rest, expanded, keyboard focus, mobile, static motion |
+| Capabilities | Four visible service categories with headings, small rule and lists | Four/two/one columns |
+| Team selector | Nick, Pavlo, Oleksandr; selected name stays white and uses `aria-pressed` | All members, keyboard focus, rapid switching |
+| Portrait | Actual depth-based monochrome point cloud from each person's source photograph | Ready, offscreen, reduced motion, WebGL/asset failure |
+| Text reveal | Accessible unsplit copy and decorative character spans | Start, middle, end, reverse scroll, static fallback |
+
+The fifth Design Team Extension row and capability column are intentionally hidden. Do not reintroduce them when creating a showcase or new section from an old data source. Do not duplicate a visible person's name above the bio; the right-side selector already names the person.
+
+### Section inventory
+
+1. **Hero:** centered promise, rotating supporting line, explanation and one booking CTA, atmospheric particles. Header is shared chrome.
+2. **Point of view:** the “AI makes it easier…” narrative with measured sticky reading stage.
+3. **Product clarity photo story:** coordinated product/evidence composition and two statement moments.
+4. **Selected works:** asymmetric image-led project grid with common heading reveal.
+5. **Services:** “What we do,” four editorial outcome rows and four capability columns.
+6. **Team introduction:** centered approved paragraph, matching narrative typography and scroll logic.
+7. **Team portraits:** biography left, actual particle portrait center, member selector right; one-column adaptation on mobile.
+
+Each section story must preserve its semantic heading relationship, complete copy, dependencies and fallback. Keep isolated section review distinct from full-page integration review: sticky scenes and global navigation need both.
+
+## Motion system
+
+### Shared feedback and media
+
+| Behavior | Current value |
+| --- | --- |
+| Feedback / sibling de-emphasis | 220ms ease-out; inactive opacity .4 |
+| Work preview / atmosphere | 750ms `cubic-bezier(.22, 1, .36, 1)` |
+| Work preview label | 180ms opacity; 240ms scale |
+| Service row expansion | 650ms same ease-out curve |
+| Service background | 600ms ease |
+| Service preview visibility | 450ms opacity; 650ms transform |
+| Team selector color | 250ms ease |
+| Header blur entrance | 300ms opacity; 26px backdrop blur |
+
+These durations are not scroll speeds. Scroll-linked animation maps page position to progress and uses damping to smooth input.
+
+### Letter reveal and reading stages
+
+`SensumTextMotion` owns splitting, easing, progress and painting. Do not copy the renderer into another component.
+
+- Letters resolve from opacity 0 to 1, 5px blur to 0, and .3em lift to 0.
+- Narrative profile: viewport start .65, span .60, feather .12, damping 90ms.
+- Heading base profile: start .90, span .18, feather .72, damping 130ms.
+- Work and services headings apply the approved 25%-slower modifier: span `.18 / .75 = .24`, finishing at 66% viewport height. Their timing matches each other.
+- Photo scene damping is 180ms. Maximum frame delta is 64ms.
+- Narrative and team introduction share the sticky stage: measured reading height (85svh fallback) plus 25svh. Reduced motion removes the sticky reading hold.
+- Reverse scroll restores the corresponding visual state. Settled reveal loops stop.
+- Only activate hidden character states after the shared renderer initializes. Without JavaScript, retain readable full text.
+
+### Atmospheric and geometry effects
+
+Hero dots form a coherent moving field and preserve a quiet text zone. Portfolio edge particles are confined to the preview boundary; only the active preview runs. Services use decorative dot orbs; their approved per-service shapes and optical sizes are intentionally different. Preserve their center alignment when resizing.
+
+Team portraits use registered color, depth and silhouette maps, never a static generated particle image. Their defaults include depth strength .7, point size .65–1.65, core noise .012, edge noise .12, noise speed .3, and limited cursor rotation (.14 horizontal / .06 vertical). Quality tiers and device-pixel-ratio caps belong to the renderer. Initial portraits are fully formed: no loading photograph flash or scattered-particle entrance. A source-photo fallback is reserved for rendering failure. Switching members preserves one rendering system and its cleanup contract.
+
+Offscreen and hidden-tab work should stop. Reduced motion resolves text, stops continuous drift/rotation and avoids decorative transitions. The public motion button is intentionally hidden; system motion preferences remain supported.
+
+## Accessibility and resilience
+
+- Preserve real text, logical heading levels and accessible names after character splitting.
+- Keep a visible focus state on both light and inverse surfaces; controls need at least 44×44px targets.
+- Meet AA contrast for essential text and UI. Decorative particles can be low-opacity; controls and biographies cannot depend on them for legibility.
+- Keep touch behavior complete without hover. Service descriptions are always visible.
+- Supply usable reduced-motion, forced-color and print states. Do not equate a shorter animation with a static fallback.
+- Reserve media dimensions. Handle image, WebGL and texture failures without breaking selection or copy.
+- Confirm no horizontal overflow at 320px, representative mobile, tablet and desktop widths.
+- Links and asset URLs must work under GitHub Pages' `/sensum-website/` project prefix.
+
+## Design Systems Ops
+
+The dedicated Design Systems Ops reviewer checks shared changes against this document and [the review checklist](design-system/REVIEW-CHECKLIST.md). Reviews classify findings as **keep**, **adjust**, or **remove**, with affected source and reproducible state. User-approved exceptions are recorded explicitly; they are not silently replaced by older brand guidance.
+
+For a change: identify affected roles → update shared source → add or update stories → validate static and interactive states → review the full page → record remaining limitations. Fix shared causes before patching individual examples. Screenshot approval does not replace keyboard, reduced-motion or source-drift checks.
+
+From the project root:
+
+```sh
+cd website
+npm ci
+npm run components:check  # detect generated-source drift before rebuilding
+npm test
+npm run storybook        # development library on port 6006
+npm run build-storybook  # compose previews and build website/storybook/
 ```
 
-## Colors
+Edit `components/*.html`, then run `npm run components:build`. The generated `index.html` remains the static homepage; isolated documents live in `design-system/previews/`. Stories frame these documents and expose width/height controls. Product Clarity includes its parent narrative, and Team Switcher includes its controlled biography/portrait, because those interactions require their parent context.
 
-| Token | Value | Use |
-| --- | --- | --- |
-| `--color-canvas` | #f7f6f3 | Base page canvas |
-| `--color-section` | #faf9f6 | Warm narrative / portfolio background |
-| `--color-surface` | #ffffff | White surfaces and highlights |
-| `--color-text` | #1a2530 | Primary ink |
-| `--color-text-secondary` | #5b676f | Case descriptions and secondary copy |
-| `--color-text-support` | #17283b | Existing supporting/navigation copy |
-| `--color-border` | #d5dce2 | Quiet borders |
-| `--color-accent` | #405d78 | Focus and interaction accents |
-| `--color-accent-soft` | #aebed2 | Selection and soft accents |
-| `--color-accent-wash` | #e8eef5 | Tinted surfaces |
-| `--color-image-placeholder` | #e7e6e1 | Preview loading background |
+`tools/prepare-storybook-dev.mjs` copies runtime assets to `.storybook-public/` for local Storybook. Restart the Storybook command after changing production assets so the copied preview assets refresh. `tools/prepare-pages.mjs` assembles public runtime files and the library into repository-root `_site/`, excluding node_modules and tooling. The Pages workflow installs, tests, builds and deploys this artifact.
 
-Use color roles rather than sampling another component. Decorative gradients, canvas particles, and prototype-card palettes are not yet fully tokenized. They should not become additional general-purpose text colors.
-
-## Letter reveal
-
-The narrative, both photo-story messages, and portfolio heading call the same `SensumTextMotion.split()` and `paint()` functions. Words stay intact across line breaks, and assistive technology receives one unsplit copy; decorative characters are hidden from it.
-
-- Each letter smoothly resolves from opacity 0 to 1, 5px blur to 0, and .3em vertical lift to 0.
-- Narrative and story messages use a 12% overlapping feather with smoothstep easing. Short headings use a 72% feather: letters begin in reading order with substantial overlap, creating a quick, continuous sweep rather than isolated typing. No CSS transition is added to the scroll-driven character values.
-- Narrative uses 90ms exponential damping; short headings use 130ms to soften wheel and trackpad steps while retaining the short reveal range. A 64ms frame cap prevents large jumps after stalls.
-- Narrative starts when its measured anchor reaches 65% of viewport height and completes at 5%. Short headings use the faster `tokens.heading` profile: start at 90%, complete at 72%, so the title is readable early in the section entrance.
-- The photo composition retains its 180ms scene damping and its two message windows, while sharing the identical per-letter treatment.
-- Scroll reversal restores the corresponding state. Settled heading/scene render loops stop; no perpetual reveal animation is required.
-
-`SensumTextMotion.tokens` owns numeric JavaScript timing and progress constants; CSS owns visual units. Do not duplicate the feather or easing math in a new section.
-
-To add a reveal, follow `portfolio-heading.js`: check reduced motion, forced colors, and the motion toggle; split with prefix `text-reveal`; paint a damped 0–1 progress (use `tokens.heading` for the viewport profile and its feather for short headings); only then activate `data-reveal="active"`. The generic `.text-reveal__word` / `.text-reveal__char` styles are already included. Keep content visible when scripts are unavailable. Do not repeatedly split an element on resize.
-
-## Interaction and image styles
-
-- Sibling de-emphasis: `--interaction-muted-opacity: .4`, with `--motion-duration-feedback: 220ms` and `--motion-ease-feedback: ease-out`. Navigation and portfolio use the same tokens; touch and forced-color modes avoid hover dimming.
-- Preview zoom: `--motion-duration-preview: 750ms`, `--motion-ease-out: cubic-bezier(.22, 1, .36, 1)`.
-- Preview corners: `--radius-preview: 24px`.
-- Portfolio hover atmosphere: `--motion-preview-edge-blur: 11px` across the outer 15% of each side, blended into `--story-background` so the boundary dissolves into the page while the center stays sharp. On hover, a final intersected horizontal/vertical mask feathers the complete preview over 6% of each edge; the 24px rounded clip remains in place on hover, with the composite fade softening its boundary. The registered `--preview-edge-fade` property interpolates the mask on entry and exit, avoiding a hard switch. Dots, blur, and zoom share the preview easing. The hover label retains its original 180ms opacity and 240ms scale transitions, and follows the pointer directly without positional smoothing. Immediately on hover, a dense preview-edge dot field (confined to the outer 7.5% and capped at 16,000 particles and clipped to the image corners, with the hero’s subpixel mark sizes and coherent opposing currents; near-black grain at 90–100% base opacity moves at 2.5× the original flow speed and fades out at both boundaries of the band to avoid an outline) fades in with `--motion-duration-atmosphere`, aliased to the 750ms preview duration. Only the active preview animates; exit, scroll, resize, hidden tabs, pause, or preference changes cancel work. Touch, reduced-motion, forced-color, and print modes retain ordinary images.
-- Reduced motion removes transforms/transitions as defined by each component. New components must supply equivalent static behavior, not merely shorten durations.
-
-## Maintenance
-
-Change a semantic token when changing a role across the site. Change a component style when changing only that component. Preserve the accessible copy, static fallback, responsive layout, and scroll reversal when extending motion. Keep scene-specific sequencing separate from the shared letter renderer.
-
-Validation: `node --test website/tests/*.cjs` from the project root.
-
-## Services: text-only editorial rows
-
-Five full-width near-black (`#080808`) rows show the approved outcome title on the left and its exact description on the right. Serif titles, muted `#a0a0a0` descriptions, and thin `#303030` dividers preserve the editorial direction. A left-aligned “What we do” heading sits inside the dark section above the first divider. There are no disclosures or capability lists. On desktop hover or keyboard focus, rows expand from 300px to 420px over 650ms, shift to #181818, and reveal a decorative placeholder image in the centre. Reduced motion disables transitions; narrow layouts omit the preview. On mobile, each description stacks below its title. All content is available through ordinary scrolling without JavaScript.
-
-The full header gains a 26px backdrop blur after 24px of scroll, matching the Phantom reference’s full-width treatment. Its mask fades from opaque to 60% at 75% height and then transparent at the bottom, extending 8px below the header. Entry/exit uses a 300ms opacity transition, disabled for reduced motion. Navigation links sit directly over the full-width blur, without a pill background, border, or separate backdrop filter. Scroll-direction behavior remains. Browsers without backdrop filtering use a warm-white fade; forced colors use Canvas. Sections marked `data-header-theme="dark"` switch the logo, links, dot icons, Contact, and mobile menu control to off-white when they cross the header midpoint. Light sections restore ink text. Dropdown panels retain their light styling, and the blur fallback becomes charcoal over dark sections.
-
-The service section ends with five capability columns on desktop, each with a 16px service name, short divider, and muted 16px capability list. Below 900px the overview uses two columns; below 480px it stacks into one.
+Public routes are `/sensum-website/design-system/guide.html` and `/sensum-website/storybook/`; a story can be linked with `?path=/story/components--primary-button`. Build the static Storybook before publishing; verify both the homepage and public story URL after deployment. Do not claim deployed or browser-verified status without checking it.

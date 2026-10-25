@@ -1,0 +1,20 @@
+{
+  "name": "sensum-design-system",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "components:build": "node tools/build-components.mjs",
+    "components:check": "node tools/build-components.mjs --check",
+    "storybook": "npm run components:build && node tools/prepare-storybook-dev.mjs && storybook dev -p 6006 --no-open",
+    "build-storybook": "npm run components:build && storybook build -o storybook",
+    "test": "node --test tests/*.test.cjs"
+  },
+  "devDependencies": {
+    "@storybook/html-vite": "10.6.3",
+    "@storybook/addon-docs": "10.6.3",
+    "storybook": "10.6.3",
+    "vite": "^7.3.1",
+    "parse5": "^8.0.0"
+  }
+}

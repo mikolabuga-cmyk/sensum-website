@@ -3,12 +3,7 @@
 
 :root {
   color-scheme: light;
-  /* Shared page rails: header, hero and sections use one content boundary. */
-  --page-content-max: 1920px;
-  --page-margin: clamp(20px, 3.333333vw, 64px);
-  --gutter: max(var(--page-margin), calc((100vw - var(--page-content-max)) / 2));
-  --grid-gap: clamp(16px, 2.5vw, 40px);
-  --section-space: clamp(72px, 8.333333vw, 160px);
+
 }
 *, *::before, *::after { box-sizing: border-box; }
 html { background: var(--canvas); color: var(--ink); font-family: var(--font-body); -webkit-text-size-adjust: 100%; }
@@ -445,9 +440,9 @@ html[data-hero-graphic="particles"][data-hero-palette="pastel"] .hero-transition
 html[data-hero-graphic="particles"] .particle-field { opacity: 1; }
 
 /* Glass CTA: its surface moves independently of the readable label. */
-.button--primary { position: relative; isolation: isolate; border-radius: 999px; min-height: 54px; padding-inline: 28px; border: 0; background: radial-gradient(ellipse at 35% 110%,#42696288,transparent 48%),radial-gradient(ellipse at 65% 110%,#98536c88,transparent 48%),#1b1c1e; box-shadow: none; color: #fff; }
+.button--primary { position: relative; isolation: isolate; border-radius: var(--radius-pill); min-height: 54px; padding-inline: 28px; border: 0; background: radial-gradient(ellipse at 35% 110%,#42696288,transparent 48%),radial-gradient(ellipse at 65% 110%,#98536c88,transparent 48%),#1b1c1e; box-shadow: none; color: #fff; }
 .button--primary:hover { background-color: #222326; }
-.button--primary.fluid-button--ready, .button--primary.fluid-button--ready:hover { overflow: hidden; background: #1b1c1e; border: 0; border-radius: 999px; box-shadow: none; }
+.button--primary.fluid-button--ready, .button--primary.fluid-button--ready:hover { overflow: hidden; background: var(--color-control-primary); border: 0; border-radius: var(--radius-pill); box-shadow: none; }
 .fluid-button__surface { position: absolute; z-index: -1; left: 0; top: 0; width: 100%; height: 100%; border-radius: inherit; pointer-events: none; }
 .button--primary:focus-visible { outline: 2px solid var(--deep-blue); outline-offset: 5px; }
 @media (forced-colors: active) {

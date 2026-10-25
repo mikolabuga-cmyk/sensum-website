@@ -83,3 +83,19 @@ The formed V2 ring has a slow particle orbit and a subtle radial breathing motio
 ## Shared design foundations
 
 Typography, semantic colors, and letter-reveal motion now have shared tokens and recipes. See [DESIGN-SYSTEM.md](DESIGN-SYSTEM.md) for values, responsive rules, usage, and extension guidance.
+
+## Design system and Storybook
+
+Open `design-system/guide.html` for the visual style guide, or `storybook/` for the built interactive library.
+
+From this directory:
+
+- `npm ci` installs the pinned Storybook toolchain (Node 24).
+- `npm run storybook` starts the library on port 6006.
+- `npm run build-storybook` composes all components and builds the public library.
+- `npm run components:check` detects generated-output drift.
+- `npm test` runs the existing behavioral checks.
+
+The editable source is `components/page.html` plus the named HTML partials in `components/`. Includes use `<!-- component:name -->`. `index.html` is generated and remains readable without JavaScript. Each section is a separate component; reusable buttons, work cards, service rows, capabilities, and team controls are nested partials. IDs are deliberately stable for production motion and accessible relationships. Mount one instance of each scene per document. Storybook isolates examples in iframes to avoid duplicate IDs and leaked animation listeners.
+
+GitHub Actions builds and publishes the website, visual guide, and Storybook together. The public artifact excludes dependencies and development tooling. Review changes with `design-system/REVIEW-CHECKLIST.md`; consult `DESIGN-SYSTEM.md` for component contracts and intentional exceptions.
