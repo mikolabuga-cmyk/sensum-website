@@ -8,7 +8,7 @@
     "components:check": "node tools/build-components.mjs --check",
     "storybook": "npm run components:build && node tools/prepare-storybook-dev.mjs && storybook dev -p 6006 --no-open",
     "build-storybook": "npm run components:build && storybook build -o storybook",
-    "test": "node --test tests/*.test.cjs"
+    "test": "node tools/test.mjs"
   },
   "devDependencies": {
     "@storybook/html-vite": "10.6.3",
