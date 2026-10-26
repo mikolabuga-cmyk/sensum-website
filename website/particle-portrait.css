@@ -37,7 +37,7 @@
 .particle-portrait[data-status='fallback'] .particle-portrait__fallback { visibility: visible; }
 
 .team-intro { display: grid; place-items: center; min-height: 85svh; padding: clamp(96px,14svh,180px) var(--gutter); background: var(--color-inverse-canvas); color: var(--color-inverse-text); }
-.team-intro h2 { width: 100%; max-width: 1040px; margin: 0 auto; text-align: center; font-family: var(--font-display); font-size: var(--type-narrative-size); font-weight: 500; line-height: var(--type-narrative-leading); letter-spacing: var(--type-narrative-tracking); }
+.team-intro h2 { width: 100%; max-width: 1040px; margin: 0 auto; text-align: center; font-family: var(--font-display); font-size: var(--type-narrative-size); font-weight: 400; line-height: var(--type-narrative-leading); letter-spacing: var(--type-narrative-tracking); }
 @media(max-width:760px){ .team-intro { min-height: auto; padding: 96px 24px; } .team-intro h2 { font-size: var(--type-narrative-size-mobile); line-height: var(--type-narrative-leading-mobile); } }
 
 /* Match the opening point-of-view chapter's scroll distance and sticky hold. */

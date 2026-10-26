@@ -111,6 +111,7 @@ The fifth Design Team Extension row and capability column are intentionally hidd
 5. **Services:** “What we do,” four editorial outcome rows and four capability columns.
 6. **Team introduction:** centered approved paragraph, matching narrative typography and scroll logic.
 7. **Team portraits:** biography left, actual particle portrait center, member selector right; one-column adaptation on mobile.
+8. **How we work:** five expanding process columns; hover, focus, and click share selection. All descriptions show in stacked layouts at 900px; single-column steps at 480px.
 
 Each section story must preserve its semantic heading relationship, complete copy, dependencies and fallback. Keep isolated section review distinct from full-page integration review: sticky scenes and global navigation need both.
 
@@ -185,3 +186,9 @@ Edit `components/*.html`, then run `npm run components:build`. The generated `in
 `tools/prepare-storybook-dev.mjs` copies runtime assets to `.storybook-public/` for local Storybook. Restart the Storybook command after changing production assets so the copied preview assets refresh. `tools/prepare-pages.mjs` assembles public runtime files and the library into repository-root `_site/`, excluding node_modules and tooling. The Pages workflow installs, tests, builds and deploys this artifact.
 
 Public routes are `/sensum-website/design-system/guide.html` and `/sensum-website/storybook/`; a story can be linked with `?path=/story/components--primary-button`. Build the static Storybook before publishing; verify both the homepage and public story URL after deployment. Do not claim deployed or browser-verified status without checking it.
+
+### How we work
+
+`components/how-we-work.html`, `how-we-work.css`, and `how-we-work.js` define the five-stage process after the team section. Stages are Research & Insights, Strategy & Planning, Functional Prototyping, User Testing & Validation, and Design Engineering & Delivery. The regular-weight section heading uses the shared scroll-letter renderer. All desktop steps start closed and return to the closed state on pointer leave or blur. Desktop columns use inverse canvas/text/border tokens and the existing 650ms expansion curve; one selected column grows to 2.7 shares. Pointer hover, button focus, and click select the same stage. Left/right arrows and Home/End move focus. Descriptions are linked through `aria-controls` and expansion state.
+
+At 900px and below, stages stack and all copy stays visible; at 480px, each stage becomes one column. Reduced motion disables transitions. Without JavaScript, all descriptions remain in the reading order. This section is available in Storybook as **Sections / How We Work**. Its copy is supplied by the user, not copied from the interaction reference.

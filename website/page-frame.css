@@ -1,0 +1,36 @@
+/* A viewport-sized aperture over native document scrolling. */
+html[data-page-frame] { background: var(--color-inverse-canvas, #080808); --frame-scale: .966; --frame-gap: calc(100vw * (1 - var(--frame-scale)) / 2); --frame-shift: calc(var(--frame-gap) - 100svh * (1 - var(--frame-scale)) / 2); --frame-origin-y: 50svh; --frame-radius: 28px; }
+html[data-page-frame] body { background: var(--color-inverse-canvas, #080808); }
+html[data-page-frame] #main {
+  background: var(--color-inverse-canvas, #080808);
+  transform-origin: 50% 50svh;
+  transform: translateY(var(--frame-shift)) scale(var(--frame-scale));
+}
+/* Keep the existing fixed navigation outside the transformed scrolling content. */
+html[data-page-frame] .header-chrome {
+  scale: var(--frame-scale);
+  transform-origin: 50% 0;
+  translate: 0 var(--frame-gap);
+}
+.page-frame-aperture {
+  position: fixed; z-index: 100; inset: var(--frame-gap); pointer-events: none;
+  border-radius: var(--frame-radius);
+  box-shadow: 0 0 0 100vmax var(--color-inverse-canvas, #080808);
+}
+@media (max-width: 600px) {
+  html[data-page-frame] { --frame-scale: .96; --frame-radius: 20px; }
+}
+@media print {
+  html[data-page-frame] #main { transform: none; }
+  .page-frame-aperture { display: none; }
+}
+
+/* Continue an active service background across the fixed outer gutters. */
+.page-frame-service-edges {
+  position: fixed; inset-inline: 0; top: 0; height: 0; z-index: 101;
+  pointer-events: none;
+  background: linear-gradient(to right, currentColor var(--frame-gap), transparent var(--frame-gap), transparent calc(100% - var(--frame-gap)), currentColor calc(100% - var(--frame-gap)));
+  color: transparent;
+}
+@media (prefers-reduced-motion: reduce) { .page-frame-service-edges { transition: none; } }
+@media print { .page-frame-service-edges { display: none; } }

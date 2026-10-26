@@ -3,11 +3,11 @@ const assert=require('node:assert/strict');
 const vm=require('node:vm');
 const fs=require('node:fs');
 const source=fs.readFileSync(require('node:path').join(__dirname,'../text-disintegration.js'),'utf8');
-function setup({noGL=false,shaderFail=false,reduced=false,width=300,height=220,fullInk=false,openingOnly=false}={}) {
+function setup({noGL=false,shaderFail=false,reduced=false,width=300,height=220,fullInk=false,openingOnly=false,frameScale=1}={}) {
   let rafId=0, progress=0, lastTween, mask, points, disposed=false, clock=0;
   const uniforms={};
   const frames=new Map(),events={},docEvents={},media={},glCalls=[],mutations=[];
-  const rect=(x,y,w,h)=>({left:x,top:y,width:w,height:h,bottom:y+h,right:x+w});
+  const rect=(x,y,w,h)=>({left:x*frameScale,top:y*frameScale,width:w*frameScale,height:h*frameScale,bottom:(y+h)*frameScale,right:(x+w)*frameScale});
   const stage={clientWidth:width,clientHeight:height,getBoundingClientRect:()=>rect(0,0,width,height),append(c){this.canvas=c}};
   const chars=[{textContent:'A',getBoundingClientRect:()=>rect(35,70,30,72)},{textContent:'I',getBoundingClientRect:()=>rect(65,70,16,72)}];
   const paragraph={closest:()=>stage,querySelectorAll:()=>chars,getBoundingClientRect:()=>rect(35,70,100,72)};
@@ -179,4 +179,13 @@ test('extending the shared stage for photos does not slow the original text diss
   h.section.offsetHeight=220*3.05;
   assert.equal(h.tween.config.scrollTrigger.end(),end);
   assert.equal(h.values['--opening-stage-height'],'220px');
+});
+
+test('scaled page frame preserves glyph mask positions at the DOM-to-particle handoff',()=>{
+  const plain=setup(),framed=setup({frameScale:.966});
+  assert.equal(framed.fills.length,plain.fills.length);
+  framed.fills.forEach((glyph,i)=>{
+    assert.ok(Math.abs(glyph.x-plain.fills[i].x)<.0001);
+    assert.ok(Math.abs(glyph.y-plain.fills[i].y)<.0001);
+  });
 });

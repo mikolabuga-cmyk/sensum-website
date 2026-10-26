@@ -4,8 +4,9 @@
   const control = document.querySelector('.motion-toggle');
   const content = document.querySelector('.hero__content');
   if (!eyebrow || !control) return;
-  const phrases = ['SaaS platforms', 'AI products', 'Mobile Apps'];
-  const fullCopy = 'Senior team for SaaS platforms, AI products, and Mobile Apps.';
+  const phrases = eyebrow.dataset.phrases?.split('|') || ['SaaS platforms', 'AI products', 'Mobile Apps'];
+  const prefixCopy = eyebrow.dataset.prefix || 'Senior team for';
+  const fullCopy = eyebrow.textContent.trim();
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let index = 0, timer = 0, visible = true, built = false, running = false, word;
   function build() {
@@ -14,11 +15,17 @@
     accessible.className = 'sr-only'; accessible.textContent = fullCopy;
     const visual = document.createElement('span');
     visual.className = 'eyebrow-visual'; visual.setAttribute('aria-hidden', 'true');
-    const prefix = document.createElement('span'); prefix.textContent = 'Senior team for';
+    const prefix = document.createElement('span'); prefix.textContent = prefixCopy;
     const slot = document.createElement('span'); slot.className = 'eyebrow-slot';
     phrases.forEach(text => {
       const sizer = document.createElement('span');
-      sizer.className = 'eyebrow-sizer'; sizer.textContent = text; slot.append(sizer);
+      sizer.className = 'eyebrow-sizer';
+      for (const letter of text) {
+        const span = document.createElement('span');
+        span.textContent = letter === ' ' ? '\u00a0' : letter;
+        sizer.append(span);
+      }
+      slot.append(sizer);
     });
     word = document.createElement('span'); word.className = 'eyebrow-word';
     slot.append(word); visual.append(prefix, slot); eyebrow.append(accessible, visual);
@@ -39,7 +46,7 @@
     }, 620);
   }
   function sync() {
-    const enabled = !reduced.matches && !control.hidden;
+    const enabled = !reduced.matches;
     if (!enabled) {
       clearTimeout(timer); running = false; built = false;
       eyebrow.textContent = fullCopy; return;

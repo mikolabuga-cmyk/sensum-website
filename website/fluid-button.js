@@ -23,16 +23,20 @@
     const fragment = compile(gl.FRAGMENT_SHADER, `precision highp float;
       varying vec2 uv; uniform vec2 size; uniform vec2 pointer;
       uniform float time; uniform float hover; uniform float ripple; uniform float energy;
-      uniform float edgePhase;
+      uniform float edgePhase; uniform float surfacePadding; uniform float idleMotion;
       void main(){
-        vec2 p=(uv-.5)*size; vec2 b=size*.5;
+        // Extend the lighting beyond the resting capsule into its liquid edge.
+        vec2 p=(uv-.5)*(size+vec2(surfacePadding*2.)); vec2 b=size*.5;
         // The capsule geometry stays fixed; only its internal lighting moves.
         // CSS clips the full-bleed surface to the fixed button silhouette.
         vec2 cursor=(pointer-.5)*size;
         // The raised color wave swells and settles during the hover pulse.
         float activity=hover*energy;
         float flow=time*.38;
-        float drift=.055*sin(flow)+.025*sin(flow*.63+1.2);
+        // A quiet idle breath: roughly one cycle every six seconds.
+        float idle=idleMotion*(1.-hover*.7);
+        float idlePulse=sin(time*1.05);
+        float drift=.055*sin(flow)+.025*sin(flow*.63+1.2)+idle*.085*sin(time*.62);
         vec2 touch=(pointer-.5)*hover;
         // Slide the light around the full capsule perimeter, including the top edge.
         // Rotate only the light field into the edge's inward-facing coordinate frame.
@@ -58,7 +62,7 @@
         float crest=exp(-pow(abs((x-center)/sideWidth),1.8));
         float fold=.014*sin(x*5.+flow*.91)+.009*sin(x*8.-flow*.67);
         float shoulder=exp(-pow((x+.34+.08*sin(flow*.8))/.34,2.));
-        float height=.022+(.27+.085*hover+.05*activity+touch.y*.035+fold)*crest
+        float height=.022+(.27+idle*.045*idlePulse+.085*hover+.05*activity+touch.y*.035+fold)*crest
           +.025*shoulder;
         float haze=exp(-pow(bottom/height,1.4));
         // Long, faint color diffusion reaches upward without lifting the bright base.
@@ -76,7 +80,7 @@
           +vec3(.22,.57,.65)*cyan+vec3(.43,.32,.65)*violet
           +vec3(.65,.31,.49)*pink+vec3(.73,.42,.25)*peach)
           /max(.8,amber+green+cyan+violet+pink+peach);
-        float breath=.91+.10*hover+.07*activity+.025*sin(flow*.85);
+        float breath=.91+.10*hover+.07*activity+.025*sin(flow*.85)+idle*.15*idlePulse;
         vec3 color=vec3(.105,.108,.112);
         color+=spectrum*(haze*.92+veil*(.16+.06*activity))*breath;
         // A broad pearly lift joins the colors at the base, never a sharp line.
@@ -122,7 +126,7 @@
     const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
     const position=gl.getAttribLocation(program,'position');gl.enableVertexAttribArray(position);gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
-    uniforms=Object.fromEntries(['size','pointer','time','hover','ripple','energy','edgePhase'].map(k=>[k,gl.getUniformLocation(program,k)]));
+    uniforms=Object.fromEntries(['size','pointer','time','hover','ripple','energy','edgePhase','surfacePadding','idleMotion'].map(k=>[k,gl.getUniformLocation(program,k)]));
     button.classList.add('fluid-button--ready');
   }
   // A long, seamless breath gently lifts and settles the light during hover.
@@ -154,7 +158,11 @@
     }
     if(Math.abs(pressure-target)<.001) pressure=target;
     const width=button.clientWidth,height=button.clientHeight,ratio=Math.min(devicePixelRatio,2);
-    if(canvas.width!==Math.round(width*ratio)||canvas.height!==Math.round(height*ratio)) {canvas.width=Math.round(width*ratio);canvas.height=Math.round(height*ratio);gl.viewport(0,0,canvas.width,canvas.height);}
+    const padding=button.classList.contains('liquid-button')?18:0;
+    const renderWidth=Math.round((width+padding*2)*ratio),renderHeight=Math.round((height+padding*2)*ratio);
+    if(canvas.width!==renderWidth||canvas.height!==renderHeight) {canvas.width=renderWidth;canvas.height=renderHeight;gl.viewport(0,0,canvas.width,canvas.height);}
+    gl.uniform1f(uniforms.surfacePadding,padding);
+    gl.uniform1f(uniforms.idleMotion,button.closest('.hero') && !still ? 1:0);
     gl.uniform2f(uniforms.size,width,height);gl.uniform2f(uniforms.pointer,cursorX,cursorY);
     gl.uniform1f(uniforms.edgePhase,edgePhase);
     gl.uniform1f(uniforms.time,time);gl.uniform1f(uniforms.hover,pressure);gl.uniform1f(uniforms.ripple,ripple);gl.uniform1f(uniforms.energy,energyAt(hoverTime));
@@ -184,4 +192,77 @@
   canvas.addEventListener('webglcontextrestored',()=>{try{init();wake();}catch{button.classList.remove('fluid-button--ready');}});
   try{init();wake();}catch{canvas.remove();button.classList.remove('fluid-button--ready');}
   });
+})();
+
+/* A fixed hit area with a locally deforming liquid surface. */
+(() => {
+  const button = document.querySelector('.hero .button--primary');
+  if (!button) return;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const surface = document.createElement('span');
+  surface.className = 'liquid-button__shape';
+  surface.setAttribute('aria-hidden', 'true');
+  const canvas = button.querySelector('.fluid-button__surface');
+  if (canvas) surface.append(canvas);
+  button.prepend(surface);
+  button.classList.add('liquid-button');
+  let frame = 0, previous = 0, amount = 0, target = 0;
+  let pointer = { x: 0, y: 0 }, cursor = { x: 0, y: 0 };
+  const padding = 18;
+  function outline() {
+    const w = button.offsetWidth, h = button.offsetHeight;
+    const r = h / 2, straight = Math.max(0, w / 2 - r);
+    const points = [];
+    // Sample the capsule by rays, including its straight top and bottom edges.
+    for (let i = 0; i < 128; i++) {
+      const angle = i / 128 * Math.PI * 2;
+      const x = Math.cos(angle), y = Math.sin(angle);
+      const topDistance = r / Math.max(.00001, Math.abs(y));
+      const distance = Math.abs(x * topDistance) <= straight ? topDistance
+        : straight * Math.abs(x) + Math.sqrt(Math.max(0, r*r - straight*straight*y*y));
+      let px = w / 2 + x * distance, py = h / 2 + y * distance;
+      const dx = cursor.x - px, dy = cursor.y - py;
+      const length = Math.hypot(dx, dy);
+      // A narrow patch of the edge follows the magnet; the rest stays still.
+      const pull = amount * 12 * Math.exp(-Math.pow(length / 44, 2));
+      px += dx / Math.max(1, length) * pull;
+      py += dy / Math.max(1, length) * pull;
+      points.push(`${(px + padding).toFixed(2)}px ${(py + padding).toFixed(2)}px`);
+    }
+    surface.style.clipPath = `polygon(${points.join(',')})`;
+  }
+  function draw(now) {
+    const dt = Math.min(40, previous ? now - previous : 16); previous = now;
+    const ease = 1 - Math.exp(-dt / 85);
+    amount += (target - amount) * ease;
+    cursor.x += (pointer.x - cursor.x) * ease;
+    cursor.y += (pointer.y - cursor.y) * ease;
+    const moving = Math.abs(target - amount) > .001 || (target > 0 && Math.hypot(pointer.x-cursor.x,pointer.y-cursor.y) > .05);
+    if (!moving) amount = target;
+    outline();
+    frame = moving ? requestAnimationFrame(draw) : 0;
+    if (!moving) previous = 0;
+  }
+  const wake = () => { if (!frame) frame = requestAnimationFrame(draw); };
+  const reset = () => { target = 0; wake(); };
+  window.addEventListener('pointermove', event => {
+    if (!fine.matches || reduced.matches || event.pointerType !== 'mouse' || button.closest('.hero--entering') || document.documentElement.hasAttribute('data-loading')) { reset(); return; }
+    const rect = button.getBoundingClientRect();
+    pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    const dx = Math.max(0, Math.abs(pointer.x-rect.width/2) - (rect.width-rect.height)/2);
+    const edgeDistance = Math.hypot(dx,pointer.y-rect.height/2) - rect.height/2;
+    // Pull only from outside: never cave the surface in beneath the label.
+    target = edgeDistance >= 0 ? Math.max(0, 1 - edgeDistance/70) : 0;
+    wake();
+  }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', reset);
+  window.addEventListener('blur', reset);
+  window.addEventListener('scroll', reset, { passive: true });
+  button.addEventListener('focus', reset);
+  const restore = () => { cancelAnimationFrame(frame); frame=0; previous=0; amount=target=0; outline(); };
+  fine.addEventListener('change', restore); reduced.addEventListener('change', restore);
+  document.addEventListener('visibilitychange', restore);
+  new ResizeObserver(outline).observe(button);
+  outline();
 })();

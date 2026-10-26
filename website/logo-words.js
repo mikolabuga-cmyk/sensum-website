@@ -7,7 +7,9 @@
   const reveal = document.createElement('span');
   reveal.className = 'brand-reveal';
   reveal.setAttribute('aria-hidden', 'true');
-  brand.append(reveal);
+  const wordmark = brand.querySelector('.wordmark');
+  if (!wordmark) return;
+  wordmark.append(reveal);
   const words = ['design', 'strategy', 'AI'];
   let timer, index = 0, active = false, hovered = false, focused = false;
   function showWord() {

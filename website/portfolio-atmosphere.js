@@ -48,6 +48,7 @@
     const random = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
     const count = Math.min(16000, Math.round((width + height) * 14));
     const smooth = value => { const t = Math.max(0, Math.min(1, value)); return t * t * (3 - 2 * t); };
+    const blackDots = preview.dataset.dotColor === 'black';
     const dots = Array.from({ length: count }, () => {
       const side = random() * (width + height) < width;
       const along = random(), edge = random() < .5;
@@ -60,8 +61,8 @@
       const tone = Math.round(255 * .02 * gradient * (1 - smooth((x - .64) / .32) * .55));
       const boundary = Math.min(x, 1 - x, y, 1 - y);
       const feather = smooth(boundary / .015) * (1 - smooth((boundary - .045) / .025));
-      return { x, y, radius: (.45 + random() * .5) * 1.16 / 2,
-        alpha: (.9 + random() * .1) * feather, color: `rgb(${tone} ${tone} ${tone})` };
+      return { x, y, radius: (.45 + random() * .5) * (blackDots ? 1.4 : 1.16) / 2,
+        alpha: (.9 + random() * .1) * feather, color: blackDots ? '#000' : `rgb(${tone} ${tone} ${tone})` };
     });
     state.running = true;
     preview.dataset.dots = 'active';

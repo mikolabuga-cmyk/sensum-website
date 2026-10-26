@@ -28,7 +28,7 @@
   margin: 0;
   font-size: var(--type-heading-size);
   line-height: var(--type-heading-leading);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-regular, 400);
   letter-spacing: var(--type-heading-tracking);
 }
 .portfolio-grid__intro { margin: 0; font-size: 16px; line-height: 1.5; color: var(--color-text-secondary); }

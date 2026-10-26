@@ -4,45 +4,60 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Sensum is a product design studio for B2B software and AI products. We define and design software worth building.">
-  <meta name="theme-color" content="#f7f6f3">
+  <meta name="theme-color" content="#faf9f6">
   <title>Sensum — Product thinking, design and AI</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="preload" href="assets/fonts/google-sans-variable.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="design-tokens.css?v=20261025-design-system">
   <link rel="stylesheet" href="text-motion.css?v=20261018-foundations">
+  <link rel="stylesheet" href="site-loader.css?v=20261026-smooth-width">
+  <script src="site-loader.js?v=20261026-start-at-hero"></script>
   <script src="text-motion.js?v=20261018-heading-smooth" defer></script>
-  <link rel="stylesheet" href="styles.css?v=20261025-design-system">
-  <link rel="stylesheet" href="portfolio-grid.css?v=20261022-restored-heading">
-  <link rel="stylesheet" href="services.css?v=20261025-design-system">
-  <link rel="stylesheet" href="particle-portrait.css?v=20261025-design-system">
+  <link rel="stylesheet" href="styles.css?v=20261026-medium-hero">
+  <link rel="stylesheet" href="portfolio-grid.css?v=20261026-regular-heading">
+  <link rel="stylesheet" href="services.css?v=20261026-lighter-hover">
+  <link rel="stylesheet" href="particle-portrait.css?v=20261026-regular-intro">
   <script type="module" src="particle-portrait.js?v=20261023-nick-restored"></script>
   <script type="module" src="services-orb.js?v=20261022-searching-cube-speed4"></script>
   <script src="portfolio-heading.js?v=20261023-headings-slower" defer></script>
   <script src="portfolio-grid.js?v=20261018" defer></script>
   <script src="portfolio-hover.js?v=20261018" defer></script>
-  <script src="portfolio-atmosphere.js?v=20261018-darker-faster" defer></script>
-  <script src="logo-words.js?v=20261011" defer></script>
-  <script src="fluid-button.js?v=20261012-contact-final" defer></script>
+  <script src="portfolio-atmosphere.js?v=20261026-black-dots" defer></script>
+  <script src="logo-words.js?v=20261026-logo-baseline" defer></script>
+  <script src="fluid-button.js?v=20261026-active-gradient" defer></script>
   <script src="hero-variants.js?v=20261019-neutral-start" defer></script>
   <script src="hero-atmosphere.js?v=20261017-warm-hero" defer></script>
   <script src="portfolio-previews.js?v=20261012" defer></script>
   <script src="particle-field.js?v=20261017-darker-hero-dots" defer></script>
-  <script src="hero-type.js?v=20261009-restored-fade" defer></script>
+  <script src="hero-type.js?v=20261026-faster-reveal" defer></script>
   <script src="site.js?v=20261019-section-links" defer></script>
   <script src="nav-scroll.js?v=20261020-header-theme" defer></script>
   <script src="vendor/gsap.min.js" defer></script>
   <script src="vendor/ScrollTrigger.min.js" defer></script>
   <script src="text-reveal.js?v=20261023-team-narrative" defer></script>
-  <script src="text-disintegration.js?v=20261017-shared-photo-scene" defer></script>
+  <script src="text-disintegration.js?v=20261026-frame-alignment" defer></script>
   <script src="story-flashlight.js?v=20261017-opening-only" defer></script>
   <script src="story-reveal.js?v=20261017-shared-photo-scene" defer></script>
   <script src="photo-story.js?v=20261018-foundations" defer></script>
   <script src="section-transition.js?v=20261010-blue-only" defer></script>
   <script src="hero-mesh.js?v=20261009-blue-halftone2" defer></script>
 
-  <script src="hero-words.js?v=20261007-suction" defer></script>
+  <script src="hero-words.js?v=20261026-stable-eyebrow" defer></script>
+  <link rel="stylesheet" href="how-we-work.css?v=20261025">
+  <script src="how-we-work.js?v=20261025" defer></script>
+  <link rel="stylesheet" href="selected-work-v2.css?v=20261026-editorial-covers">
+  <script src="selected-work-v2.js" defer></script>
 </head>
 <body>
+  <div class="site-loader" aria-hidden="true">
+  <div class="site-loader__content">
+    <div class="site-loader__identity">
+      <span class="site-loader__logo wordmark">sensum<span class="site-loader__suffix"><span class="site-loader__suffix-inner"><span class="site-loader__separator">.</span><span class="brand-reveal__word" data-loader-word></span></span></span></span>
+    </div>
+  </div>
+  <span class="site-loader__counter" data-loader-counter>0%</span>
+</div>
+
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="header-chrome">
     <div class="header-blur" aria-hidden="true"></div>
@@ -55,19 +70,10 @@
         <div class="nav-item">
           <a class="nav-link" href="#services"><svg class="nav-dots" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="2" cy="2" r=".9" style="--dot-opacity:.16;--dot-delay:0ms"/><circle cx="6" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:40ms"/><circle cx="10" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:80ms"/><circle cx="14" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:120ms"/><circle cx="18" cy="2" r=".9" style="--dot-opacity:.16;--dot-delay:160ms"/><circle cx="2" cy="6" r=".9" style="--dot-opacity:1;--dot-delay:40ms"/><circle cx="6" cy="6" r=".9" style="--dot-opacity:.16;--dot-delay:54ms"/><circle cx="10" cy="6" r=".9" style="--dot-opacity:.16;--dot-delay:94ms"/><circle cx="14" cy="6" r=".9" style="--dot-opacity:.16;--dot-delay:134ms"/><circle cx="18" cy="6" r=".9" style="--dot-opacity:1;--dot-delay:174ms"/><circle cx="2" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:80ms"/><circle cx="6" cy="10" r=".9" style="--dot-opacity:.16;--dot-delay:94ms"/><circle cx="10" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:108ms"/><circle cx="14" cy="10" r=".9" style="--dot-opacity:.16;--dot-delay:148ms"/><circle cx="18" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:188ms"/><circle cx="2" cy="14" r=".9" style="--dot-opacity:1;--dot-delay:120ms"/><circle cx="6" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:134ms"/><circle cx="10" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:148ms"/><circle cx="14" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:162ms"/><circle cx="18" cy="14" r=".9" style="--dot-opacity:1;--dot-delay:202ms"/><circle cx="2" cy="18" r=".9" style="--dot-opacity:.16;--dot-delay:160ms"/><circle cx="6" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:174ms"/><circle cx="10" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:188ms"/><circle cx="14" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:202ms"/><circle cx="18" cy="18" r=".9" style="--dot-opacity:.16;--dot-delay:216ms"/></svg><span>Services</span></a>
         </div>
-        <details class="nav-item" name="primary-navigation">
-          <summary><svg class="nav-dots" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="2" cy="2" r=".9" style="--dot-opacity:.16;--dot-delay:0ms"/><circle cx="6" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:40ms"/><circle cx="10" cy="2" r=".9" style="--dot-opacity:.16;--dot-delay:80ms"/><circle cx="14" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:120ms"/><circle cx="18" cy="2" r=".9" style="--dot-opacity:.16;--dot-delay:160ms"/><circle cx="2" cy="6" r=".9" style="--dot-opacity:1;--dot-delay:40ms"/><circle cx="6" cy="6" r=".9" style="--dot-opacity:.16;--dot-delay:54ms"/><circle cx="10" cy="6" r=".9" style="--dot-opacity:.16;--dot-delay:94ms"/><circle cx="14" cy="6" r=".9" style="--dot-opacity:.16;--dot-delay:134ms"/><circle cx="18" cy="6" r=".9" style="--dot-opacity:1;--dot-delay:174ms"/><circle cx="2" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:80ms"/><circle cx="6" cy="10" r=".9" style="--dot-opacity:.16;--dot-delay:94ms"/><circle cx="10" cy="10" r=".9" style="--dot-opacity:.16;--dot-delay:108ms"/><circle cx="14" cy="10" r=".9" style="--dot-opacity:.16;--dot-delay:148ms"/><circle cx="18" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:188ms"/><circle cx="2" cy="14" r=".9" style="--dot-opacity:1;--dot-delay:120ms"/><circle cx="6" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:134ms"/><circle cx="10" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:148ms"/><circle cx="14" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:162ms"/><circle cx="18" cy="14" r=".9" style="--dot-opacity:1;--dot-delay:202ms"/><circle cx="2" cy="18" r=".9" style="--dot-opacity:.16;--dot-delay:160ms"/><circle cx="6" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:174ms"/><circle cx="10" cy="18" r=".9" style="--dot-opacity:.16;--dot-delay:188ms"/><circle cx="14" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:202ms"/><circle cx="18" cy="18" r=".9" style="--dot-opacity:.16;--dot-delay:216ms"/></svg><span>Approach</span></summary>
-          <div class="nav-panel">
-            <p class="nav-panel__intro">From an open question to a clear next step.</p>
-            <ol class="approach-menu">
-              <li><strong>Understand</strong><span>The product, the people, and the constraints.</span></li>
-              <li><strong>Define</strong><span>The problem, the priorities, and the direction.</span></li>
-              <li><strong>Design and validate</strong><span>Prototype the experience. Test what matters.</span></li>
-              <li><strong>Prepare to build</strong><span>Resolve the flows, states, and handoff.</span></li>
-            </ol>
-          </div>
-        </details>
-        <details class="nav-item" name="primary-navigation">
+        <div class="nav-item">
+          <a class="nav-link" href="#how-we-work"><svg class="nav-dots" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="2" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:0ms"/><circle cx="6" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:40ms"/><circle cx="10" cy="2" r=".9" style="--dot-opacity:.16;--dot-delay:80ms"/><circle cx="14" cy="2" r=".9" style="--dot-opacity:.16;--dot-delay:120ms"/><circle cx="18" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:160ms"/><circle cx="2" cy="6" r=".9" style="--dot-opacity:.16;--dot-delay:40ms"/><circle cx="6" cy="6" r=".9" style="--dot-opacity:1;--dot-delay:54ms"/><circle cx="10" cy="6" r=".9" style="--dot-opacity:1;--dot-delay:94ms"/><circle cx="14" cy="6" r=".9" style="--dot-opacity:.16;--dot-delay:134ms"/><circle cx="18" cy="6" r=".9" style="--dot-opacity:1;--dot-delay:174ms"/><circle cx="2" cy="10" r=".9" style="--dot-opacity:.16;--dot-delay:80ms"/><circle cx="6" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:94ms"/><circle cx="10" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:108ms"/><circle cx="14" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:148ms"/><circle cx="18" cy="10" r=".9" style="--dot-opacity:.16;--dot-delay:188ms"/><circle cx="2" cy="14" r=".9" style="--dot-opacity:1;--dot-delay:120ms"/><circle cx="6" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:134ms"/><circle cx="10" cy="14" r=".9" style="--dot-opacity:1;--dot-delay:148ms"/><circle cx="14" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:162ms"/><circle cx="18" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:202ms"/><circle cx="2" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:160ms"/><circle cx="6" cy="18" r=".9" style="--dot-opacity:.16;--dot-delay:174ms"/><circle cx="10" cy="18" r=".9" style="--dot-opacity:.16;--dot-delay:188ms"/><circle cx="14" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:202ms"/><circle cx="18" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:216ms"/></svg><span>Approach</span></a>
+        </div>
+        <details hidden class="nav-item" name="primary-navigation">
           <summary><svg class="nav-dots" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><circle cx="2" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:0ms"/><circle cx="6" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:40ms"/><circle cx="10" cy="2" r=".9" style="--dot-opacity:.16;--dot-delay:80ms"/><circle cx="14" cy="2" r=".9" style="--dot-opacity:.16;--dot-delay:120ms"/><circle cx="18" cy="2" r=".9" style="--dot-opacity:1;--dot-delay:160ms"/><circle cx="2" cy="6" r=".9" style="--dot-opacity:.16;--dot-delay:40ms"/><circle cx="6" cy="6" r=".9" style="--dot-opacity:1;--dot-delay:54ms"/><circle cx="10" cy="6" r=".9" style="--dot-opacity:1;--dot-delay:94ms"/><circle cx="14" cy="6" r=".9" style="--dot-opacity:.16;--dot-delay:134ms"/><circle cx="18" cy="6" r=".9" style="--dot-opacity:1;--dot-delay:174ms"/><circle cx="2" cy="10" r=".9" style="--dot-opacity:.16;--dot-delay:80ms"/><circle cx="6" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:94ms"/><circle cx="10" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:108ms"/><circle cx="14" cy="10" r=".9" style="--dot-opacity:1;--dot-delay:148ms"/><circle cx="18" cy="10" r=".9" style="--dot-opacity:.16;--dot-delay:188ms"/><circle cx="2" cy="14" r=".9" style="--dot-opacity:1;--dot-delay:120ms"/><circle cx="6" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:134ms"/><circle cx="10" cy="14" r=".9" style="--dot-opacity:1;--dot-delay:148ms"/><circle cx="14" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:162ms"/><circle cx="18" cy="14" r=".9" style="--dot-opacity:.16;--dot-delay:202ms"/><circle cx="2" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:160ms"/><circle cx="6" cy="18" r=".9" style="--dot-opacity:.16;--dot-delay:174ms"/><circle cx="10" cy="18" r=".9" style="--dot-opacity:.16;--dot-delay:188ms"/><circle cx="14" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:202ms"/><circle cx="18" cy="18" r=".9" style="--dot-opacity:1;--dot-delay:216ms"/></svg><span>About</span></summary>
           <div class="nav-panel nav-panel--studio">
             <p class="nav-panel__intro">A small team for the decisions that matter.</p>
@@ -115,11 +121,11 @@
 
       <!-- Section 01 — Hero -->
       <section class="hero" aria-labelledby="hero-heading">
-        <div class="hero__content">
-          <p class="hero__eyebrow">Senior team for SaaS platforms, AI products, and Mobile Apps.</p>
-          <h1 id="hero-heading"><span class="hero-line">Shaping the future of products with design, strategy, and AI.</span></h1>
-          <p class="hero__description">We turn chaos into a clear product vision that makes sense for users and your business.</p>
-          <a class="button button--primary" href="mailto:hi@sensum.company?subject=Let%E2%80%99s%20talk%20about%20our%20product&amp;body=Hi%20Sensum%2C%0A%0AI%27d%20like%20to%20arrange%20a%20call.%0A%0AHere%27s%20what%20we%27re%20working%20on%3A%0A%0AThe%20challenge%20we%27d%20like%20help%20with%3A%0A%0A" aria-label="Book a free call by email">Book a free call</a>
+        <div class="hero__content hero__content--v4">
+          <p class="hero__eyebrow" data-prefix="Design Agency for" data-phrases="Complex Products|Startups &amp; Enterprises|AI-Driven Products">Design Agency for Complex Products, Startups &amp; Enterprises, and AI-Driven Products.</p>
+          <h1 id="hero-heading"><span class="hero-line">Senior product thinking.</span> <span class="hero-line">AI-native execution.</span></h1>
+          <p class="hero__description">From chaos to business impact with product strategy, design, and validation.</p>
+          <a class="button button--primary" href="mailto:hi@sensum.company?subject=Let%E2%80%99s%20talk%20about%20our%20product&amp;body=Hi%20Sensum%2C%0A%0AI%27d%20like%20to%20arrange%20a%20call.%0A%0AHere%27s%20what%20we%27re%20working%20on%3A%0A%0AThe%20challenge%20we%27d%20like%20help%20with%3A%0A%0A" aria-label="Let's chat by email">Let's chat</a>
         </div>
       </section>
     <div class="hero-transition-edge" aria-hidden="true"></div>
@@ -193,7 +199,7 @@
       <div class="portfolio-grid__column portfolio-grid__column--left">
         <article class="portfolio-project">
           <a class="portfolio-project__link" href="https://www.acceptandproceed.com/work/ibm-watsonx-orchestrate" target="_blank" rel="noopener noreferrer" aria-label="IBM watsonx Orchestrate by Accept &amp; Proceed — opens in a new tab">
-            <div class="portfolio-project__preview">
+            <div class="portfolio-project__preview" data-dot-color="black">
               <span class="portfolio-project__hover" aria-hidden="true">View Project</span>
               <div class="portfolio-project__image"><img src="assets/portfolio/references/ibm.jpg?v=20261019-product-ui" alt="IBM watsonx Orchestrate interface states showing the AI agent lifecycle and workflow controls." width="1600" height="900" loading="lazy" decoding="async"></div>
             </div>
@@ -298,10 +304,11 @@
   </section>
   <section class="team-intro" data-narrative-reveal data-opening-only="true" data-header-theme="dark" aria-labelledby="team-intro-heading">
     <div class="point-of-view__chapter"><div class="point-of-view__stage">
-    <h2 id="team-intro-heading" class="point-of-view__text">A small team of senior product people with 37 years of combined experience. The people shaping the strategy are the ones doing the work. No layers, no unnecessary process. Just direct collaboration, fixed budgets, and real partnership.</h2>
+    <h2 id="team-intro-heading" class="point-of-view__text">We combine senior product expertise, AI-powered workflows, and real user feedback to move from complex challenges to working solutions. Less overhead, faster decisions, fixed budgets, and tangible results at every stage.</h2>
     </div></div>
   </section>
-  <section class="team-portrait" id="team" data-header-theme="dark" aria-labelledby="team-name">
+  <!-- Temporarily hidden by request; remove hidden to restore the team portrait section. -->
+<section hidden class="team-portrait" id="team" data-header-theme="dark" aria-labelledby="team-name">
     <div class="team-portrait__copy" id="team-bio" aria-live="polite" aria-atomic="true">
       <h2 id="team-name" hidden>Nick</h2>
       <p class="team-portrait__role">Product Strategist</p>
@@ -317,6 +324,32 @@
       <button type="button" data-team-member="oleksandr" aria-pressed="false" aria-controls="team-bio">Oleksandr</button>
     </nav>
   </section>
+  <section class="how-we-work" id="how-we-work" data-header-theme="dark" aria-labelledby="how-we-work-heading">
+  <header class="how-we-work__header"><h2 class="type-heading" id="how-we-work-heading" data-scroll-heading="heading">How we work</h2></header>
+  <ol class="how-we-work__steps">
+    <li class="work-step">
+      <button class="work-step__trigger" type="button" aria-expanded="true" aria-controls="work-step-understand"><span class="work-step__number" aria-hidden="true">01</span><span class="work-step__title">Research &amp;<br>Insights</span></button>
+      <div class="work-step__detail" id="work-step-understand"><p>We analyze your business, users, competitors, and existing product to identify the problems worth solving. AI-assisted research helps us turn information into actionable insights faster, so we focus on what creates real value.</p></div>
+    </li>
+    <li class="work-step">
+      <button class="work-step__trigger" type="button" aria-expanded="true" aria-controls="work-step-define"><span class="work-step__number" aria-hidden="true">02</span><span class="work-step__title">Strategy &amp;<br>Planning</span></button>
+      <div class="work-step__detail" id="work-step-define"><p>We translate insights into a clear product direction, define priorities, key features, success criteria, and scope. You get an actionable roadmap, timeline, and budget, with everyone aligned on what we're building and why.</p></div>
+    </li>
+    <li class="work-step">
+      <button class="work-step__trigger" type="button" aria-expanded="true" aria-controls="work-step-design"><span class="work-step__number" aria-hidden="true">03</span><span class="work-step__title">Functional Prototyping</span></button>
+      <div class="work-step__detail" id="work-step-design"><p>We use AI-assisted design and code to explore solutions and build realistic, interactive prototypes early. Instead of static screens, you get a working experience you can explore, share, and evaluate before investing in full development.</p></div>
+    </li>
+    <li class="work-step">
+      <button class="work-step__trigger" type="button" aria-expanded="true" aria-controls="work-step-validate"><span class="work-step__number" aria-hidden="true">04</span><span class="work-step__title">User Testing &amp; Validation</span></button>
+      <div class="work-step__detail" id="work-step-validate"><p>We put prototypes in front of real users, test critical workflows, and challenge assumptions. Feedback helps us improve the experience and make informed decisions before problems become expensive to fix.</p></div>
+    </li>
+    <li class="work-step">
+      <button class="work-step__trigger" type="button" aria-expanded="true" aria-controls="work-step-handoff"><span class="work-step__number" aria-hidden="true">05</span><span class="work-step__title">Design Engineering &amp; Delivery</span></button>
+      <div class="work-step__detail" id="work-step-handoff"><p>We turn validated concepts into polished interfaces, scalable design systems, and implementation-ready solutions. Working closely with developers, we help bridge the gap between design and code to ensure the final product works as intended.</p></div>
+    </li>
+  </ol>
+</section>
+
   </main>
   <div class="text-version-switcher" role="group" aria-label="Section 2 text animation" hidden>
     <span>Text animation</span>

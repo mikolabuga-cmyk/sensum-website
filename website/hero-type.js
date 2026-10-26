@@ -37,15 +37,18 @@
   // Option 2 gives its particle graphic an opening beat before foreground text.
   const finish = () => { clearTimeout(finishTimer); hero.classList.remove('hero--entering'); };
   function enter() {
+    if (document.documentElement.hasAttribute('data-loading')) return;
     finish();
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const delay = document.documentElement.dataset.heroGraphic === 'particles' ? 1150 : 0;
+    const delay = document.documentElement.dataset.heroGraphic === 'particles' ? 150 : 0;
     hero.style.setProperty('--intro-delay', `${delay}ms`);
     void hero.offsetWidth;
     hero.classList.add('hero--entering');
     finishTimer = setTimeout(finish, delay + Math.max(2500, 800 + index * 23));
   }
-  enter();
+  if (document.documentElement.hasAttribute('data-loading')) {
+    document.addEventListener('site-loader-ready', enter, { once: true });
+  } else enter();
   document.addEventListener('hero-variant-change', () => {
     if (document.documentElement.dataset.heroGraphic === 'particles') enter();
     else finish();

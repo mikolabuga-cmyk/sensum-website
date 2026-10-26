@@ -178,6 +178,10 @@
     const box = stage.getBoundingClientRect(), textBox = paragraph.getBoundingClientRect();
     width = stage.clientWidth; height = stage.clientHeight;
     if (!width || !height) return;
+    // DOM rectangles include the page-frame transform; the canvas uses local
+    // layout pixels. Undo ancestor scaling before rasterizing the glyph mask.
+    const scaleX = box.width / width || 1;
+    const scaleY = box.height / height || 1;
     const style = getComputedStyle(paragraph);
     const chars = [...paragraph.querySelectorAll('.point-of-view__char')];
     if (!chars.length) throw Error('Text layout unavailable');
@@ -189,7 +193,7 @@
     section.dataset.textSampling = 'true';
     try { rects = chars.map(char=>char.getBoundingClientRect()); }
     finally { delete section.dataset.textSampling; }
-    const nextSignature = [width,height,style.font,style.letterSpacing,...rects.map(r=>`${(r.left-box.left).toFixed(2)},${(r.top-box.top).toFixed(2)}`)].join('|');
+    const nextSignature = [width,height,style.font,style.letterSpacing,...rects.map(r=>`${((r.left-box.left)/scaleX).toFixed(2)},${((r.top-box.top)/scaleY).toFixed(2)}`)].join('|');
     if (ready && signature === nextSignature) return;
     ratio = Math.min(window.devicePixelRatio || 1,2,Math.sqrt(2400000/(width*height)));
     const maxTexture = gl.getParameter(gl.MAX_TEXTURE_SIZE);
@@ -207,7 +211,7 @@
     const ascent = metrics.fontBoundingBoxAscent ?? fontSize*.8;
     const descent = metrics.fontBoundingBoxDescent ?? fontSize*.2;
     const baseline = (lineHeight-ascent-descent)/2+ascent;
-    chars.forEach((char,i)=>ctx.fillText(char.textContent,rects[i].left-box.left,rects[i].top-box.top+baseline));
+    chars.forEach((char,i)=>ctx.fillText(char.textContent,(rects[i].left-box.left)/scaleX,(rects[i].top-box.top)/scaleY+baseline));
     const rgba = style.color.match(/[\d.]+/g);
     if (rgba?.length >= 3) ink = rgba.slice(0,3).map(Number).map(n=>n/255);
     const pixels = ctx.getImageData(0,0,w,h);
@@ -223,7 +227,7 @@
     for (let y=0;y<h;y+=cell) for (let x=0;x<w;x+=cell) {
       let alpha=0, sx=0, sy=0;
       const seed = ((Math.imul(x+1979,73856093)^Math.imul(y+11,19349663))>>>0)/4294967295;
-      const across = clamp((x/ratio-(textBox.left-box.left))/textBox.width);
+      const across = clamp((x/ratio-(textBox.left-box.left)/scaleX)/(textBox.width/scaleX));
       const release = Math.round((.025+.28*across+.025*seed+.008*Math.sin(y/ratio*.07))*255);
       for (let cy=y;cy<Math.min(y+cell,h);cy++) for (let cx=x;cx<Math.min(x+cell,w);cx++) {
         const at=(cy*w+cx)*4, a=pixels.data[at+3];

@@ -1,5 +1,6 @@
 /* Editorial service rows with a decorative hover preview. */
 .services-stack {
+  --service-hover-background: #101010;
   --services-ink: var(--color-inverse-text);
   --services-muted: var(--color-inverse-muted);
   margin: 0; padding: 0; color: var(--services-ink); background: var(--color-inverse-canvas);
@@ -7,9 +8,9 @@
 }
 .services-header { padding: 44px var(--gutter); }
 .services-header h2 { margin: 0; font-weight: 400; color: var(--services-ink); }
-.service-panel { border-top: 1px solid var(--color-inverse-border); scroll-margin-top: 96px; transition: background-color var(--motion-duration-service-background) ease; }
+.service-panel { border-top: 0; scroll-margin-top: 96px; transition: background-color var(--motion-duration-service-background) ease; }
 .service-panel:focus-visible { outline: 2px solid var(--services-ink); outline-offset: -3px; }
-.service-panel:last-child { border-bottom: 1px solid var(--color-inverse-border); }
+.service-panel:last-child { border-bottom: 0; }
 .service-panel__inner {
   position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: end; gap: clamp(48px, 12vw, 240px);
@@ -23,12 +24,12 @@
   transition: opacity var(--motion-duration-service-reveal) ease, transform var(--motion-duration-service-expand) var(--motion-ease-out);
 }
 @media (min-width: 761px) {
-  .service-panel:focus-visible { background: var(--color-inverse-hover); }
+  .service-panel:focus-visible { background: var(--service-hover-background); }
   .service-panel:focus-visible .service-panel__inner { min-height: 420px; }
   .service-panel:focus-visible .service-panel__preview { opacity: 1; transform: translateY(0) scale(1); }
 }
 @media (min-width: 761px) and (hover: hover) and (pointer: fine) {
-  .service-panel:hover { background: var(--color-inverse-hover); }
+  .service-panel:hover { background: var(--service-hover-background); }
   .service-panel:hover .service-panel__inner { min-height: 420px; }
   .service-panel:hover .service-panel__preview { opacity: 1; transform: translateY(0) scale(1); }
 }
