@@ -22,11 +22,11 @@ function setup({ fine = true, reduced = false } = {}) {
 test('the hover label tracks within image bounds and restores the pointer on exit', () => {
   const h = setup();
   h.events.pointerenter({ pointerType: 'mouse', clientX: 101, clientY: 201 });
-  assert.equal(h.label.style.left, '66px');
-  assert.equal(h.label.style.top, '28px');
+  assert.equal(h.label.style.left, '46px');
+  assert.equal(h.label.style.top, '46px');
   h.events.pointermove({ pointerType: 'mouse', clientX: 499, clientY: 424 });
-  assert.equal(h.label.style.left, '334px');
-  assert.equal(h.label.style.top, '197px');
+  assert.equal(h.label.style.left, '354px');
+  assert.equal(h.label.style.top, '179px');
   assert.equal(h.preview.dataset.hoverTracking, 'true');
   h.events.pointerleave();
   assert.equal(h.preview.dataset.hoverTracking, 'false');

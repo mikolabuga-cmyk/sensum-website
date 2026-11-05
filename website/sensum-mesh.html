@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Sensum · Particle wordmark</title>
+  <style>
+    @font-face {
+      font-family: "Google Sans";
+      src: url("assets/fonts/google-sans-variable.ttf") format("truetype");
+      font-weight: 100 900;
+      font-display: swap;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; color: #182028; }
+    main { position: relative; height: 100vh; height: 100dvh; display: grid; place-items: center; overflow: hidden; }
+    h1 { margin: 0; font: 500 min(24vw, 52vh, 350px)/1 "Google Sans", Arial, sans-serif; letter-spacing: -.045em; }
+    canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: pinch-zoom; }
+    main[data-ready] h1 { opacity: 0; }
+    .ring { display: none; position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border: 1px solid #18202866; border-radius: 50%; pointer-events: none; }
+    main[data-pointer] .ring { display: block; }
+    main[data-pointer] { cursor: none; }
+    @media (forced-colors: active) {
+      main[data-ready] h1 { opacity: 1; }
+      canvas, main[data-pointer] .ring { display: none; }
+    }
+  </style>
+  <script src="sensum-mesh.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>Sensum</h1>
+    <canvas aria-hidden="true"></canvas>
+    <span class="ring" aria-hidden="true"></span>
+  </main>
+</body>
+</html>

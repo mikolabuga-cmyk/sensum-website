@@ -18,3 +18,7 @@ export const HeroV4={name:'Hero v4',render:args=>frame('previews/hero-v4',args)}
 export const SiteLoader={name:'Site loader',render:args=>frame('previews/site-loader',args)};
 
 export const SelectedWorkV2={name:'Selected work v2',render:args=>frame('previews/selected-work-v2',args)};
+
+export const WhyWorkWithUs={render:args=>frame('previews/why-work',args)};
+
+export const WhyUs={render:args=>frame('previews/why-us',args)};

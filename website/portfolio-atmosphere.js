@@ -1,4 +1,4 @@
-/* Dense edge-only grain starts immediately on hover. */
+/* Layered monochrome particles respond to the cursor within the preview perimeter. */
 (() => {
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -48,7 +48,6 @@
     const random = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
     const count = Math.min(16000, Math.round((width + height) * 14));
     const smooth = value => { const t = Math.max(0, Math.min(1, value)); return t * t * (3 - 2 * t); };
-    const blackDots = preview.dataset.dotColor === 'black';
     const dots = Array.from({ length: count }, () => {
       const side = random() * (width + height) < width;
       const along = random(), edge = random() < .5;
@@ -56,13 +55,13 @@
       const depth = .008 + random() * .062;
       const x = side ? along : (edge ? depth : 1 - depth);
       const y = side ? (edge ? depth : 1 - depth) : along;
-      // Hero's .45–.95px marks, 1.16 size multiplier and monochrome ramp.
-      const gradient = smooth((x * .60 + y * .40 - .42) / .58);
-      const tone = Math.round(255 * .02 * gradient * (1 - smooth((x - .64) / .32) * .55));
+      // Three depth planes: fine distant grain and fewer, darker foreground marks.
+      const z = random() < .16 ? 1 : (random() < .4 ? .55 : .18);
       const boundary = Math.min(x, 1 - x, y, 1 - y);
       const feather = smooth(boundary / .015) * (1 - smooth((boundary - .045) / .025));
-      return { x, y, radius: (.45 + random() * .5) * (blackDots ? 1.4 : 1.16) / 2,
-        alpha: (.9 + random() * .1) * feather, color: blackDots ? '#000' : `rgb(${tone} ${tone} ${tone})` };
+      return { x, y, z, phase: random() * Math.PI * 2,
+        radius: (.32 + random() * .24 + z * .78),
+        alpha: (.62 + z * .38) * feather, color: '#000' };
     });
     state.running = true;
     preview.dataset.dots = 'active';
@@ -79,16 +78,18 @@
       ctx.clearRect(0, 0, width, height);
       for (const dot of dots) {
         // Use the hero's coherent opposing currents, rather than isolated orbits.
-        const flow = state.phase;
+        const flow = state.phase * (.45 + dot.z * .55);
         const edge = smooth(Math.min(dot.x, 1 - dot.x, dot.y, 1 - dot.y) / .16);
-        const amplitude = Math.min(38, Math.min(width, height) * .055) * edge;
-        const x = dot.x * width + (Math.sin(dot.y * 7.5 + flow * .29) + .38 * Math.sin(dot.x * 11 - flow * .19)) * amplitude + (state.x - .5) * 7 * edge;
-        const y = dot.y * height + (Math.cos(dot.x * 6.5 - flow * .23) + .38 * Math.sin(dot.y * 10 + flow * .17)) * amplitude + (state.y - .5) * 7 * edge;
+        const amplitude = Math.min(38, Math.min(width, height) * .055) * edge * (.6 + dot.z);
+        const x = dot.x * width + (Math.sin(dot.y * 7.5 + flow * .29) + .38 * Math.sin(dot.x * 11 - flow * .19)) * amplitude + (state.x - .5) * (6 + dot.z * 26) * edge;
+        const y = dot.y * height + (Math.cos(dot.x * 6.5 - flow * .23) + .38 * Math.sin(dot.y * 10 + flow * .17)) * amplitude + (state.y - .5) * (6 + dot.z * 26) * edge;
         // Keep even the moving grain inside the narrow outer band.
         const boundary = Math.min(x / width, 1 - x / width, y / height, 1 - y / height);
         const edgeFade = smooth(boundary / .012) * (1 - smooth((boundary - .055) / .02));
         if (edgeFade === 0) continue;
-        ctx.globalAlpha = dot.alpha * edgeFade;
+        // A slow, coherent pulse gives depth without random flicker.
+        const pulse = .88 + .12 * Math.sin(state.phase * .65 + dot.phase);
+        ctx.globalAlpha = dot.alpha * edgeFade * pulse;
         ctx.fillStyle = dot.color;
         ctx.beginPath();
         ctx.arc(x, y, dot.radius, 0, Math.PI * 2);

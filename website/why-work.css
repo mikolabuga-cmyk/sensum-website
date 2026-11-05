@@ -1,0 +1,135 @@
+/* Benefit constellation: readable document flow before progressive enhancement. */
+.why-work {
+  --benefit-blue: #2347c7;
+  position: relative;
+  background: var(--color-gallery-surface);
+  color: var(--color-text);
+  scroll-margin-top: 96px;
+}
+.why-work__scene {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 104px var(--gutter) 80px;
+}
+/* Share the gallery surface with its opening narrative and the work below. */
+.why-work__scene,
+.narrative.story-reveal[data-opening-only="true"] .narrative__stage,
+:is(.portfolio-grid, .why-us, .site-footer) {
+  background:
+    linear-gradient(to bottom, var(--gallery-entry-color, transparent) 0%, transparent 60%),
+    radial-gradient(rgb(26 37 48 / .084) .55px, transparent .7px) 0 var(--paper-dot-origin, top) / 4px 4px,
+    var(--surface-join-gradient, linear-gradient(transparent, transparent)),
+    radial-gradient(ellipse at 14% 74%, #a9aaa750, transparent 32%),
+    radial-gradient(ellipse at 75% 18%, #a9aaa75c, transparent 43%),
+    radial-gradient(ellipse at 52% 90%, #c1c2bf70, transparent 40%),
+    var(--color-gallery-surface);
+}
+/* Fade in the texture from the hero's exact bottom surface color. */
+.why-work__scene,
+.narrative.story-reveal[data-opening-only="true"] .narrative__stage {
+  --gallery-entry-color: var(--story-background);
+  --surface-join-gradient: linear-gradient(to bottom, transparent 75%, var(--color-gallery-surface) 100%);
+}
+/* Both sides of the join share the same paper tone and dot density.
+   Fade the shading in again rather than restarting it at the section edge. */
+:is(.portfolio-grid, .why-us, .site-footer) {
+  --surface-join-gradient: linear-gradient(to bottom, var(--color-gallery-surface) 0, transparent 300px);
+}
+/* Finish on the same unshaded paper that starts the footer. Anchor the
+   last dot tile to this edge so the 4px rhythm continues across it. */
+.why-us {
+  --paper-dot-origin: bottom;
+  --surface-join-gradient: linear-gradient(to bottom,
+    var(--color-gallery-surface), transparent min(300px, 30%),
+    transparent 70%, var(--color-gallery-surface));
+}
+@media print, (forced-colors: active) {
+  .why-work__scene,
+  .narrative.story-reveal[data-opening-only="true"] .narrative__stage,
+  :is(.portfolio-grid, .why-us, .site-footer) { background: Canvas; }
+}
+.why-work__heading { margin: 0 0 40px; font-weight: var(--weight-regular); }
+.why-work__cards { display: grid; grid-template-columns: repeat(2,minmax(0,600px)); justify-content: center; gap: 32px; }
+.benefit-card {
+  position: relative; isolation: isolate; overflow: hidden; min-width: 0;
+  min-height: 414px; aspect-ratio: 1.45; padding: 40px; border-radius: 20px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  background: #fff; color: var(--color-text);
+  box-shadow: 0 45px 80px -24px #18212c3d, 0 1px 0 #ffffff40 inset;
+}
+.benefit-card--black { background: #080808; color: #fff; }
+.benefit-card--blue { background: var(--benefit-blue); color: #fff; }
+.benefit-card__pattern {
+  position: absolute; inset: 0 0 48%; z-index: -1; opacity: .16;
+  background: repeating-linear-gradient(90deg, transparent 0 11px, currentColor 11px 12px);
+  mask-image: radial-gradient(ellipse at 55% 5%, #000, transparent 70%);
+}
+.benefit-card__pattern::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(currentColor 1px, transparent 1.5px) 0 0 / 12px 12px;
+}
+.benefit-card h3 { margin: 0 0 24px; font: 400 32px/1.12 var(--font-display); letter-spacing: -.035em; }
+.benefit-card p { margin: 0; font: 400 18px/1.5 var(--font-body); }
+@media (max-width: 767px) {
+  .why-work__scene { padding: 72px var(--gutter); }
+  .why-work__cards { grid-template-columns: minmax(0,440px); gap: 24px; }
+  .benefit-card { padding: 28px; min-height: 480px; }
+}
+@media print {
+  .why-work__scene { height: auto !important; overflow: visible; }
+  .why-work__cards { display: block !important; height: auto !important; }
+  .why-work .benefit-card { position: relative !important; left: auto !important; top: auto !important; transform: none !important; opacity: 1 !important; width: auto !important; break-inside: avoid; margin-bottom: 24px; }
+}
+
+/* The canvas owns perspective and depth sorting; the heading stays in HTML. */
+.why-work[data-floating] .why-work__scene { height: 100svh; padding: 0; }
+.why-work[data-floating] .why-work__cards {
+  position: absolute; inset: 0; height: 100%; display: block;
+}
+.why-work[data-floating] .why-work__heading {
+  position: absolute; left: 50%; top: 50%;
+  width: min(760px, 65vw); margin: 0;
+  transform: translate(-50%, -50%);
+  text-align: center; pointer-events: none;
+}
+@media print {
+  .why-work[data-floating] .why-work__scene { padding: 40px; }
+  .why-work[data-floating] .why-work__heading { position: static; width: auto; transform: none; margin-bottom: 40px; }
+  .why-work[data-floating] .why-work__cards { position: static; perspective: none; transform-style: flat; }
+}
+.why-work__cards > .why-work__heading { grid-column: 1 / -1; }
+
+/* WebGL is visual only. Keep the original semantic copy in DOM reading order. */
+.why-work__canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; }
+.why-work[data-curved] .benefit-card {
+  position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0;
+  margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  border: 0; box-shadow: none;
+}
+.why-work[data-curved] .why-work__cards { perspective: none; transform-style: flat; pointer-events: none; }
+.why-work[data-curved] .why-work__heading { z-index: 1; }
+@media (max-width: 767px) { .benefit-card { aspect-ratio: auto; } }
+@media print {
+  .why-work__canvas { display: none; }
+  .why-work[data-curved] .benefit-card { height: auto; min-height: 0; padding: 40px; clip-path: none; white-space: normal; aspect-ratio: auto; }
+}
+
+/* Image surfaces share the same landscape crop in WebGL and document flow. */
+.why-work .benefit-card--image { padding: 0; min-height: 0; aspect-ratio: 1.45; }
+.benefit-card--image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* One pinned chapter: opening copy dissolves, then the gallery takes its place. */
+@media screen and (min-width: 1024px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {
+  .narrative[data-opening-only="true"][data-gallery="active"] {
+    min-height: calc(100svh + 696vh);
+  }
+  .narrative[data-gallery="active"] .narrative__stage {
+    position: sticky; top: 0; height: 100svh;
+  }
+  .narrative[data-gallery="active"] .why-work {
+    position: absolute; inset: 0; z-index: 5;
+    min-height: 0; background: transparent;
+  }
+  .narrative[data-gallery="active"] .why-work__scene { height: 100%; }
+}

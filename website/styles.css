@@ -819,9 +819,9 @@ html[data-contact-style="dots"] .site-header:has(.button--header:focus-visible) 
   opacity: var(--story-field, 0);
 }
 
-/* One pin holds the opening paragraph, its particle exit, and the photo story. */
+/* Hold the opening paragraph through its particle exit, then release to the gallery. */
 .narrative[data-opening-only="true"][data-opening-particles="active"] {
-  min-height: calc(var(--opening-stage-height, 100svh) + 205svh);
+  min-height: calc(var(--opening-stage-height, 100svh) + 85svh);
 }
 .narrative[data-opening-only="true"][data-opening-particles="active"] .narrative__stage {
   position: sticky; top: 0;

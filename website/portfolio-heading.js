@@ -20,7 +20,18 @@
       lastTime = 0;
       return;
     }
-    const target = motion.viewportProgress(heading.getBoundingClientRect().top, innerHeight, profile);
+    const top = heading.getBoundingClientRect().top;
+    const lead = heading.id === 'why-us-heading' ? innerHeight * .20 : 0;
+    let target = motion.viewportProgress(top - lead, innerHeight, profile);
+    if (heading.id === 'footer-heading') {
+      // The final heading can run out of page before reaching the usual end.
+      const remainingScroll = document.documentElement.scrollHeight - innerHeight - window.scrollY;
+      const availableSpan = innerHeight * profile.viewportStart - top + remainingScroll;
+      const span = Math.min(innerHeight * profile.viewportSpan, availableSpan);
+      // Start revealing just before the heading enters view.
+      const revealStart = innerHeight * (profile.viewportStart + .45);
+      target = remainingScroll <= 1 ? 1 : motion.clamp((revealStart - top) / Math.max(1, span));
+    }
     const ease = motion.damping(time, lastTime, profile.dampingMs);
     current = current === null ? target : current + (target - current) * ease;
     if (Math.abs(target - current) < .0001) current = target;

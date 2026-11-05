@@ -14,7 +14,11 @@ const names=fs.readdirSync(path.join(root,'components')).filter(n=>n.endsWith('.
 for(const name of [...names,'navigation-dark']){
  const dark=/service|capabilities|team|navigation-dark|how-we-work/.test(name);
  let markup=expand(name==='navigation-dark'?'navigation':name);
- if(name==='site-loader')markup=expand('hero-v4');
+ // Preview the loader over the complete page so scrolling and section links work after dismissal.
+ if(name==='site-loader'){
+  output('design-system/previews/site-loader.html',page.replace('<head>','<head><base href="../../">'));
+  continue;
+ }
  if(name==='navigation-dark')markup=markup.replace('class="header-chrome"','class="header-chrome" data-theme="dark"');
  if(name.startsWith('service-')||name==='capabilities')markup=`<section class="services-stack">${markup}</section>`;
  if(name==='team-switcher')markup=expand('team'); // Controls need their controlled bio and portrait.
@@ -22,14 +26,17 @@ for(const name of [...names,'navigation-dark']){
  if(name.includes('button'))markup=`<div style="display:grid;place-items:center;min-height:320px">${markup}</div>`;
  // Product clarity is a coordinated child of the narrative; keep its parent scene.
  if(name==='product-clarity')markup=expand('point-of-view');
- const scripts = name === 'selected-work-v2' ? ['selected-work-v2.js']
+ const scripts = name === 'footer' ? ['text-motion.js','portfolio-heading.js','fluid-button.js','footer.js']
+ : name === 'why-us' ? ['text-motion.js','portfolio-heading.js','why-us.js']
+ : name === 'why-work' ? ['text-motion.js','vendor/gsap.min.js','vendor/ScrollTrigger.min.js','why-work.js']
+ : name === 'selected-work-v2' ? ['selected-work-v2.js']
  : name === 'how-we-work' ? ['text-motion.js','portfolio-heading.js','how-we-work.js']
  : name.startsWith('navigation') ? ['site.js','logo-words.js','fluid-button.js']
  : name.includes('button') ? ['fluid-button.js']
  : name.startsWith('service-') || name === 'capabilities' ? ['services-orb.js']
  : name === 'services' ? ['text-motion.js','portfolio-heading.js','services-orb.js']
  : name.startsWith('team') ? ['text-motion.js','text-reveal.js','particle-portrait.js']
- : name.startsWith('work-card') || name === 'selected-work' ? ['text-motion.js','portfolio-heading.js','portfolio-grid.js','portfolio-hover.js','portfolio-atmosphere.js']
+ : name.startsWith('work-card') || name === 'selected-work' ? ['text-motion.js','portfolio-heading.js','portfolio-grid.js','portfolio-hover.js','fluid-button.js']
  : null;
  const previewHead=head.replace(/<script[^>]*src="([^"?]+)[^"]*"[^>]*><\/script>/g,(tag,src)=> scripts ? (scripts.includes(src)?tag:'') : (src==='site.js' && !['hero-v4','site-loader'].includes(name)?'':tag));
  const style=`body{background:${dark?'var(--color-inverse-canvas)':'var(--color-canvas)'}} ${name.startsWith('navigation')?'.header-chrome{position:relative!important}body{min-height:400px}':''}`;

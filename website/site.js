@@ -3,6 +3,11 @@ const toggle = document.querySelector('.menu-toggle');
 const menus = [...navigation.querySelectorAll('details')];
 const mobile = window.matchMedia('(max-width: 760px)');
 
+// Previews set a base URL for assets. Keep the logo fragment on this document.
+const topLink = new URL(window.location.href);
+topLink.hash = 'top';
+document.querySelector('.site-header .brand').href = topLink.href;
+
 function closePanels() {
   menus.forEach(menu => { menu.open = false; });
 }

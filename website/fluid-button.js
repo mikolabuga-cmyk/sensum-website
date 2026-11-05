@@ -1,8 +1,9 @@
 /* Original lightweight glass shader; the anchor remains the interactive control. */
 (() => {
-  document.querySelectorAll('.button--primary').forEach(button => {
+  document.querySelectorAll('.button--primary, .portfolio-project__preview').forEach(button => {
+  const isPreview = button.classList.contains('portfolio-project__preview');
   const canvas = document.createElement('canvas');
-  canvas.className = 'fluid-button__surface';
+  canvas.className = isPreview ? 'portfolio-project__fluid-surface' : 'fluid-button__surface';
   canvas.setAttribute('aria-hidden', 'true');
   button.prepend(canvas);
   const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: false, depth: false, antialias: false });
@@ -24,6 +25,7 @@
       varying vec2 uv; uniform vec2 size; uniform vec2 pointer;
       uniform float time; uniform float hover; uniform float ripple; uniform float energy;
       uniform float edgePhase; uniform float surfacePadding; uniform float idleMotion;
+      uniform float previewSurface;
       void main(){
         // Extend the lighting beyond the resting capsule into its liquid edge.
         vec2 p=(uv-.5)*(size+vec2(surfacePadding*2.)); vec2 b=size*.5;
@@ -51,9 +53,17 @@
           -radius*cos(angle));
         vec2 tangent=vec2(cos(angle),sin(angle));
         vec2 inward=vec2(-sin(angle),cos(angle));
+        if(previewSurface>.5){
+          // Image lighting stays on the bottom edge and follows horizontal motion only.
+          float hoverDrift=hover*sin(time*1.15)*min(size.x*.025,14.);
+          origin=vec2((pointer.x-.5)*size.x*.65+hoverDrift,-b.y);
+          inward=vec2(0.,1.);
+          tangent=vec2(1.,0.);
+          angle=0.;
+        }
         vec2 local=p-origin;
         float x=dot(local,tangent)/b.x;
-        float bottom=max(0.,dot(local,inward)/size.y);
+        float bottom=max(0.,dot(local,inward)/(previewSurface>.5?min(size.y,100.):size.y));
         float corner=smoothstep(.30,.95,abs(sin(angle)));
         // One broad asymmetric crest, shallow at the ends and lifted centrally.
         // All measurements follow the button height, preserving the reference shape.
@@ -117,7 +127,16 @@
         vec3 glassLight=mix(vec3(.52,.55,.59),min(vec3(1.),spectrum*1.8+vec3(.22)),.68);
         float surge=exp(-pow((length(p-cursor)-ripple*130.)/9.,2.))*exp(-ripple*3.);
         color+=glassLight*surge*.55;
-        gl_FragColor=vec4(color,1.);
+        float alpha=1.;
+        if(previewSurface>.5){
+          // Dissolve the light into the image, retaining the button's colored crest.
+          alpha=clamp(haze*.85+veil*.22+mintCloud*.12+pearlCloud*.16+roseCloud*.12,0.,.94);
+          // Gentle five-second breathing, confined to the bottom light field.
+          float previewPulse=.5-.5*cos(time*1.256637);
+          alpha*=mix(1.,.86+.14*previewPulse,hover);
+          color*=1.+hover*.10*previewPulse;
+        }
+        gl_FragColor=vec4(color,alpha);
       }`);
     program=gl.createProgram(); gl.attachShader(program,vertex); gl.attachShader(program,fragment); gl.linkProgram(program);
     gl.deleteShader(vertex); gl.deleteShader(fragment);
@@ -126,7 +145,7 @@
     const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
     const position=gl.getAttribLocation(program,'position');gl.enableVertexAttribArray(position);gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
-    uniforms=Object.fromEntries(['size','pointer','time','hover','ripple','energy','edgePhase','surfacePadding','idleMotion'].map(k=>[k,gl.getUniformLocation(program,k)]));
+    uniforms=Object.fromEntries(['size','pointer','time','hover','ripple','energy','edgePhase','surfacePadding','idleMotion','previewSurface'].map(k=>[k,gl.getUniformLocation(program,k)]));
     button.classList.add('fluid-button--ready');
   }
   // A long, seamless breath gently lifts and settles the light during hover.
@@ -152,7 +171,7 @@
     edgePhase=Math.atan2(Math.sin(edgePhase),Math.cos(edgePhase));
     if(!still) {
       // Slow the color drift on hover without resetting its phase.
-      time+=dt*(1-pressure*.60);
+      time+=dt*(isPreview?1.:1-pressure*.60);
       if(target) hoverTime+=dt;
       ripple+=dt;
     }
@@ -162,12 +181,13 @@
     const renderWidth=Math.round((width+padding*2)*ratio),renderHeight=Math.round((height+padding*2)*ratio);
     if(canvas.width!==renderWidth||canvas.height!==renderHeight) {canvas.width=renderWidth;canvas.height=renderHeight;gl.viewport(0,0,canvas.width,canvas.height);}
     gl.uniform1f(uniforms.surfacePadding,padding);
+    gl.uniform1f(uniforms.previewSurface,isPreview?1:0);
     gl.uniform1f(uniforms.idleMotion,button.closest('.hero') && !still ? 1:0);
     gl.uniform2f(uniforms.size,width,height);gl.uniform2f(uniforms.pointer,cursorX,cursorY);
     gl.uniform1f(uniforms.edgePhase,edgePhase);
     gl.uniform1f(uniforms.time,time);gl.uniform1f(uniforms.hover,pressure);gl.uniform1f(uniforms.ripple,ripple);gl.uniform1f(uniforms.energy,energyAt(hoverTime));
     gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,6);
-    if(!still) frame=requestAnimationFrame(draw); else previous=0;
+    if(!still && (!isPreview || hovered || focused || pressure > .001)) frame=requestAnimationFrame(draw); else previous=0;
   }
   const wake=()=>{if(!frame)frame=requestAnimationFrame(draw);};
   const trackPointer=e=>{
@@ -179,8 +199,8 @@
   button.addEventListener('pointermove',e=>{trackPointer(e);wake();},{passive:true});
   button.addEventListener('pointerenter',e=>{trackPointer(e);if(!hovered && !focused) hoverTime=0;hovered=true;wake();});
   button.addEventListener('pointerleave',()=>{hovered=false;wake();});
-  button.addEventListener('focus',()=>{if(!hovered && !focused) hoverTime=0;focused=true;wake();});
-  button.addEventListener('blur',()=>{focused=false;wake();});
+  (isPreview ? button.closest('a') : button).addEventListener('focus',()=>{if(!hovered && !focused) hoverTime=0;focused=true;wake();});
+  (isPreview ? button.closest('a') : button).addEventListener('blur',()=>{focused=false;wake();});
   button.addEventListener('pointerdown',()=>{ripple=reduced.matches?10:0;wake();});
   button.addEventListener('keydown',e=>{if(e.key==='Enter'){ripple=reduced.matches?10:0;wake();}});
   document.addEventListener('visibilitychange',wake);
@@ -265,4 +285,77 @@
   document.addEventListener('visibilitychange', restore);
   new ResizeObserver(outline).observe(button);
   outline();
+})();
+
+/* Local edge pull with a stable project hit area; light and image share the mask. */
+(() => {
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll('.portfolio-project__preview').forEach(preview => {
+    const surface = document.createElement('div');
+    surface.className = 'portfolio-project__liquid-shape';
+    while (preview.firstChild) surface.append(preview.firstChild);
+    preview.append(surface);
+    preview.classList.add('portfolio-project__preview--fluid');
+    const image = surface.querySelector('.portfolio-project__image');
+    let frame = 0, last = 0, strength = 0, target = 0;
+    let x = 0, y = 0, tx = 0, ty = 0;
+    const pad = 12;
+    const maxPull = 12;
+    function paint(now) {
+      const dt = Math.min(40, last ? now-last : 16); last = now;
+      const ease = 1-Math.exp(-dt/90);
+      strength += (target-strength)*ease; x += (tx-x)*ease; y += (ty-y)*ease;
+      const w = preview.clientWidth, h = preview.clientHeight;
+      const r = Math.min(parseFloat(getComputedStyle(preview).borderRadius)||24,w/2,h/2);
+      const points = [];
+      // Sample each rounded corner and its adjacent straight edge uniformly.
+      const corners = [[w-r,r,-Math.PI/2],[w-r,h-r,0],[r,h-r,Math.PI/2],[r,r,Math.PI]];
+      for (let c=0;c<4;c++) {
+        const [cx,cy,a] = corners[c];
+        const next = corners[(c+1)%4];
+        for(let i=0;i<16;i++) add(cx+r*Math.cos(a+i/16*Math.PI/2),cy+r*Math.sin(a+i/16*Math.PI/2));
+        const ex=cx+r*Math.cos(a+Math.PI/2), ey=cy+r*Math.sin(a+Math.PI/2);
+        const nx=next[0]+r*Math.cos(next[2]), ny=next[1]+r*Math.sin(next[2]);
+        for(let i=0;i<32;i++) add(ex+(nx-ex)*i/32,ey+(ny-ey)*i/32);
+      }
+      function add(px,py) {
+        const dx=x-px,dy=y-py,d=Math.hypot(dx,dy);
+        const pull=strength*maxPull*Math.exp(-Math.pow(d/58,2));
+        points.push(`${(px+pad+dx/Math.max(d,1)*pull).toFixed(2)}px ${(py+pad+dy/Math.max(d,1)*pull).toFixed(2)}px`);
+      }
+      surface.style.clipPath=`polygon(${points.join(',')})`;
+      if (image && w && h) {
+        // Follow the same damped pointer as the edge. Uniform overscan covers
+        // the edge pull plus the 4px translation, including the opposite edge.
+        const offsetX = Math.max(-1, Math.min(1, (x-w/2)/(w/2))) * 4 * strength;
+        const offsetY = Math.max(-1, Math.min(1, (y-h/2)/(h/2))) * 4 * strength;
+        const scale = 1 + 2 * (maxPull + 5) * strength / Math.min(w,h);
+        image.style.transform = strength > .001
+          ? `translate3d(${offsetX}px, ${offsetY}px, 0) scale(${scale})`
+          : '';
+      }
+      const moving=Math.abs(target-strength)>.001 || (target && Math.hypot(tx-x,ty-y)>.1);
+      frame=moving?requestAnimationFrame(paint):0;
+      if(!moving) last=0;
+    }
+    function wake(){if(!frame)frame=requestAnimationFrame(paint);}
+    function reset(){target=0;wake();}
+    window.addEventListener('pointermove',e=>{
+      if(!fine.matches || reduced.matches || e.pointerType!=='mouse'){if(target)reset();return;}
+      const rect=preview.getBoundingClientRect();tx=e.clientX-rect.left;ty=e.clientY-rect.top;
+      const dx=Math.max(0,-tx,tx-rect.width),dy=Math.max(0,-ty,ty-rect.height);
+      const distance=Math.hypot(dx,dy);
+      const proximity=Math.max(0,1-distance/32);
+      const next = proximity * (1 + proximity * (1 - proximity));
+      if(next || target || strength>.001){target=next;wake();}
+    },{passive:true});
+    document.documentElement.addEventListener('pointerleave',reset);
+    window.addEventListener('scroll',reset,{passive:true});
+    window.addEventListener('blur',reset);
+    reduced.addEventListener('change',()=>{strength=target=0;wake();});
+    fine.addEventListener('change',reset);
+    new ResizeObserver(wake).observe(preview);
+    wake();
+  });
 })();

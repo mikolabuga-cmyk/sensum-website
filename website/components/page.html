@@ -10,27 +10,26 @@
   <link rel="preload" href="assets/fonts/google-sans-variable.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="design-tokens.css?v=20261025-design-system">
   <link rel="stylesheet" href="text-motion.css?v=20261018-foundations">
-  <link rel="stylesheet" href="site-loader.css?v=20261026-smooth-width">
-  <script src="site-loader.js?v=20261026-start-at-hero"></script>
+  <link rel="stylesheet" href="site-loader.css?v=20261104-half-second-dot">
+  <script src="site-loader.js?v=hero-refresh-2"></script>
   <script src="text-motion.js?v=20261018-heading-smooth" defer></script>
   <link rel="stylesheet" href="styles.css?v=20261026-medium-hero">
-  <link rel="stylesheet" href="portfolio-grid.css?v=20261026-regular-heading">
+  <link rel="stylesheet" href="portfolio-grid.css?v=20261104-hover-mesh">
   <link rel="stylesheet" href="services.css?v=20261026-lighter-hover">
   <link rel="stylesheet" href="particle-portrait.css?v=20261026-regular-intro">
   <script type="module" src="particle-portrait.js?v=20261023-nick-restored"></script>
   <script type="module" src="services-orb.js?v=20261022-searching-cube-speed4"></script>
-  <script src="portfolio-heading.js?v=20261023-headings-slower" defer></script>
+  <script src="portfolio-heading.js?v=20261105-footer-letters" defer></script>
   <script src="portfolio-grid.js?v=20261018" defer></script>
-  <script src="portfolio-hover.js?v=20261018" defer></script>
-  <script src="portfolio-atmosphere.js?v=20261026-black-dots" defer></script>
+  <script src="portfolio-hover.js?v=20261028-circle-offset" defer></script>
   <script src="logo-words.js?v=20261026-logo-baseline" defer></script>
-  <script src="fluid-button.js?v=20261026-active-gradient" defer></script>
+  <script src="fluid-button.js?v=20261105-preview-edge-pull" defer></script>
   <script src="hero-variants.js?v=20261019-neutral-start" defer></script>
   <script src="hero-atmosphere.js?v=20261017-warm-hero" defer></script>
   <script src="portfolio-previews.js?v=20261012" defer></script>
-  <script src="particle-field.js?v=20261017-darker-hero-dots" defer></script>
+  <script src="particle-field.js?v=shared-grain" type="module"></script>
   <script src="hero-type.js?v=20261026-faster-reveal" defer></script>
-  <script src="site.js?v=20261019-section-links" defer></script>
+  <script src="site.js?v=logo-scroll-top" defer></script>
   <script src="nav-scroll.js?v=20261020-header-theme" defer></script>
   <script src="vendor/gsap.min.js" defer></script>
   <script src="vendor/ScrollTrigger.min.js" defer></script>
@@ -43,10 +42,16 @@
   <script src="hero-mesh.js?v=20261009-blue-halftone2" defer></script>
 
   <script src="hero-words.js?v=20261026-stable-eyebrow" defer></script>
-  <link rel="stylesheet" href="how-we-work.css?v=20261025">
+  <link rel="stylesheet" href="how-we-work.css?v=20261028-hover">
   <script src="how-we-work.js?v=20261025" defer></script>
   <link rel="stylesheet" href="selected-work-v2.css?v=20261026-editorial-covers">
   <script src="selected-work-v2.js" defer></script>
+  <link rel="stylesheet" href="why-work.css?v=20261105-continuous-paper">
+  <script src="why-work.js?v=20261105-gallery-exit" type="module"></script>
+  <link rel="stylesheet" href="why-us.css?v=code-orb">
+  <script src="why-us.js?v=code-orb" defer></script>
+  <link rel="stylesheet" href="footer.css?v=20261105-paper">
+  <script src="footer.js?v=20261105-fixed-dots" defer></script>
 </head>
 <body>
   <!-- component:site-loader -->
@@ -54,14 +59,17 @@
   <!-- component:navigation -->
   <main id="main" tabindex="-1">
   <!-- component:hero-v4 -->
-  <!-- One continuous point of view: reading, particles, then the value proposition. -->
+  <!-- Opening text dissolves before the floating-image gallery. -->
   <!-- component:point-of-view -->
+  <!-- Product clarity is hidden from the homepage; its component is retained for restoration. -->
   <!-- component:selected-work -->
   <!-- component:services -->
   <!-- component:team-introduction -->
   <!-- component:team -->
   <!-- component:how-we-work -->
+  <!-- component:why-us -->
   </main>
+  <!-- component:footer -->
   <div class="text-version-switcher" role="group" aria-label="Section 2 text animation" hidden>
     <span>Text animation</span>
     <button type="button" data-text-version-choice="v1" aria-pressed="false" aria-controls="our-why">V1</button>

@@ -19,11 +19,11 @@
       preview.dataset.hoverActive = 'true';
       if (reducedMotion.matches) return;
       const bounds = preview.getBoundingClientRect();
-      // Keep the pill fully inside the preview, including at its corners.
-      const insetX = Math.min(bounds.width / 2, 66);
-      const insetY = Math.min(bounds.height / 2, 28);
-      const x = Math.max(insetX, Math.min(bounds.width - insetX, event.clientX - bounds.left));
-      const y = Math.max(insetY, Math.min(bounds.height - insetY, event.clientY - bounds.top));
+      // Offset the circle below/right of the native hand pointer, while keeping it inside the preview.
+      const insetX = Math.min(bounds.width / 2, 46);
+      const insetY = Math.min(bounds.height / 2, 46);
+      const x = Math.max(insetX, Math.min(bounds.width - insetX, event.clientX - bounds.left + 28));
+      const y = Math.max(insetY, Math.min(bounds.height - insetY, event.clientY - bounds.top + 28));
       label.style.left = `${x}px`;
       label.style.top = `${y}px`;
       preview.dataset.hoverTracking = 'true';
