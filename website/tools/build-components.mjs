@@ -39,7 +39,7 @@ for(const name of [...names,'navigation-dark']){
  : name.startsWith('work-card') || name === 'selected-work' ? ['text-motion.js','portfolio-heading.js','portfolio-grid.js','portfolio-hover.js','fluid-button.js']
  : null;
  const previewHead=head.replace(/<script[^>]*src="([^"?]+)[^"]*"[^>]*><\/script>/g,(tag,src)=> scripts ? (scripts.includes(src)?tag:'') : (src==='site.js' && !['hero-v4','site-loader'].includes(name)?'':tag));
- const style=`body{background:${dark?'var(--color-inverse-canvas)':'var(--color-canvas)'}} ${name.startsWith('navigation')?'.header-chrome{position:relative!important}body{min-height:400px}':''}`;
+ const style=`body{background:${dark?'var(--color-inverse-canvas)':'var(--color-section)'}} ${name.startsWith('navigation')?'.header-chrome{position:relative!important}body{min-height:400px}':''}`;
  output('design-system/previews/'+name+'.html',`<!doctype html><html ${attributes}><head><base href="../../">${previewHead}<style>${style}</style></head><body>${['hero-v4','site-loader'].includes(name)?expand('site-loader')+expand('navigation'):''}<main id="main">${markup}</main></body></html>`);
 }
 console.log(`${check?'Verified':'Built'} homepage and ${names.length} component previews.`);

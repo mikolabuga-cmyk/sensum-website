@@ -27,25 +27,24 @@ Sensum is monochrome, light and precise, with dark editorial chapters. Its graph
 
 ## Colour
 
+The palette holds only colours that are visible on the live website. A value used solely by a hidden component lives inline in that component's CSS rather than as a token.
+
 ### Light roles
 
-| Token | Value | Intended use |
+| Token | Value | Where it is visible |
 | --- | --- | --- |
-| `--color-canvas` | `#f7f6f3` | Page foundation |
-| `--color-section` | `#faf9f6` | Hero and narrative base (`--story-background`) |
+| `--color-section` | `#faf9f6` | Hero base, page root (`--story-background`) |
 | `--color-gallery-surface` | `#f5f5f3` | Paper surface: narrative, gallery, work, why-us, footer |
-| `--color-surface` | `#ffffff` | White surfaces and the hero reading centre |
+| `--color-surface` | `#ffffff` | Hero reading centre, white surfaces |
 | `--color-text` | `#1a2530` | Primary ink |
 | `--color-text-support` | `#17283b` | Hero eyebrow and description |
-| `--color-text-secondary` | `#5b676f` | Work subtitles and secondary copy |
-| `--color-border` | `#d5dce2` | Quiet light-surface boundaries, nav panels |
-| `--color-accent` | `#405d78` | Focus rings and text-link hover on light surfaces |
-| `--color-accent-soft` / `--color-accent-wash` | `#aebed2` / `#e8eef5` | Legacy soft selection and open-menu wash; not a brand accent |
-| `--color-image-placeholder` | `#e7e6e1` | Media loading background |
+| `--color-text-secondary` | `#5b676f` | Work subtitles |
+| `--color-accent` | `#405d78` | Keyboard focus rings; 7% tint behind the mobile menu button. Interaction feedback only, not a brand accent |
+| `--color-accent-soft` | `#aebed2` | Text selection highlight |
 
 ### Inverse roles
 
-| Token | Value | Intended use |
+| Token | Value | Where it is visible |
 | --- | --- | --- |
 | `--color-inverse-canvas` | `#080808` | Services, team introduction, how we work, loader curtain |
 | `--color-inverse-text` | `#f3f3ef` | Text on inverse surfaces |
@@ -54,7 +53,9 @@ Sensum is monochrome, light and precise, with dark editorial chapters. Its graph
 | `--color-inverse-active` | `#101010` | Hovered service row and selected process step |
 | `--color-control-primary` | `#1b1c1e` | Primary CTA and the why-us benefits block |
 
-Component-specific values: capability rule `#3a3a3a`; why-us body text `#f2f2ff`; dark header fallback `rgb(32 32 32 / .92)` with text `#f7f7f2`; work hover label `rgb(23 23 23 / .2)` (`.55` on touch); footer wordmark `#000`; loader text gradient `#fff → #ededed → #a8adb5`. `--color-inverse-description` (`#999`) belongs to the hidden team section. `--color-inverse-hover` (`#181818`) is a legacy token with no current consumer; use `--color-inverse-active` for dark hover and selection.
+Component-specific values (visible): capability rule `#3a3a3a`; why-us body text `#f2f2ff`; dark header fallback `rgb(32 32 32 / .92)` with text `#f7f7f2`; work hover label `rgb(23 23 23 / .2)` (`.55` on touch); footer wordmark `#000`; loader text gradient `#fff → #ededed → #a8adb5`.
+
+Removed on 12 November 2026 because nothing visible used them: `--color-canvas` (`#f7f6f3`, always covered by sections), `--color-border` (`#d5dce2`), `--color-accent-wash` (`#e8eef5`), `--color-image-placeholder`, `--color-inverse-hover`, `--color-inverse-description` and `--color-white`, plus the `--canvas`, `--border` and `--blue-wash` aliases. Hidden components keep their values inline: the About menu panel (`#d5dce2`, `#e8eef5`) and team biography text (`#999`). If one of them is restored, promote its colour back to a token.
 
 The CTA's light colours (teal `#426962` and rose `#98536c` in the CSS fallback, a spectral band in WebGL) and product screenshot colours are not general-purpose accents.
 

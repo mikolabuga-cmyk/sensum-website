@@ -7,7 +7,7 @@
 .particle-portrait__fallback { width: 100%; height: 100%; object-fit: contain; opacity: .65; transition: none; }
 .particle-portrait[data-status='ready'] canvas { opacity: 1; }
 .particle-portrait[data-status='ready'] .particle-portrait__fallback { opacity: 0; }
- .team-portrait__copy .team-portrait__description { margin-top: 28px; width: 120%; max-width: 33.6ch; color: var(--color-inverse-description); line-height: 1.65; }
+ .team-portrait__copy .team-portrait__description { margin-top: 28px; width: 120%; max-width: 33.6ch; color: #999; line-height: 1.65; }
 .team-portrait__switcher { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding-left: 24px; }
 .team-portrait__switcher button { border: 0; background: none; color: #777; padding: 4px 0; min-height: 44px; font: inherit; font-size: clamp(28px,3.4vw,54px); line-height: 1.15; letter-spacing: -.045em; cursor: pointer; transition: color 250ms ease; }
 .team-portrait__switcher button:hover { color: #c6c6c6; }
@@ -29,7 +29,7 @@
 
 .team-portrait__copy .team-portrait__role { color: #fff; display: flex; align-items: center; gap: 9px; font-size: 14px; line-height: 1.4; }
 .team-portrait__role::before { content: ''; width: 7px; height: 7px; flex: 0 0 7px; border-radius: 50%; background: #fff; }
-.team-portrait__copy .team-portrait__experience { margin-top: 6px; font-size: 12px; letter-spacing: .055em; color: var(--color-inverse-description); line-height: 1.5; }
+.team-portrait__copy .team-portrait__experience { margin-top: 6px; font-size: 12px; letter-spacing: .055em; color: #999; line-height: 1.5; }
 @media(max-width:760px){ .team-portrait__copy { padding-top: 0; } }
 
 /* Keep the source-photo fallback hidden while WebGL initializes. */

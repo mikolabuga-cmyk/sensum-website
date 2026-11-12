@@ -1,5 +1,5 @@
 /* Option 2: large editorial project covers, on the existing light canvas. */
-.work-v2 { background: var(--color-canvas, #faf9f6); color: var(--ink); padding: 100px var(--gutter) 120px; }
+.work-v2 { background: var(--color-section); color: var(--ink); padding: 100px var(--gutter) 120px; }
 .work-v2__header { max-width: 1600px; margin: 0 auto 64px; }
 .work-v2 h2 { margin: 0; font-size: var(--type-heading-size); font-weight: 400; letter-spacing: var(--type-heading-tracking); }
 .work-v2__list { display: grid; gap: 56px; width: min(80vw, 100%); max-width: 1600px; margin: auto; }

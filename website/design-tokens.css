@@ -1,28 +1,22 @@
-/* Sensum foundations. Semantic roles preserve the approved homepage palette. */
+/* Sensum foundations. Only colours visible on the live website are tokens;
+   values used solely by hidden components live with those components. */
 :root {
-  --color-canvas: #f7f6f3;
   --color-gallery-surface: #f5f5f3;
   --color-section: #faf9f6;
   --color-surface: #ffffff;
   --color-text: #1a2530;
   --color-text-secondary: #5b676f;
   --color-text-support: #17283b;
-  --color-border: #d5dce2;
-  --color-accent: #405d78;
-  --color-accent-soft: #aebed2;
-  --color-accent-wash: #e8eef5;
-  --color-image-placeholder: #e7e6e1;
+  --color-accent: #405d78; /* Keyboard focus ring; mobile menu button tint. */
+  --color-accent-soft: #aebed2; /* Text selection highlight. */
 
   /* Approved inverse surfaces and interaction roles. */
   --color-inverse-canvas: #080808;
   --color-inverse-text: #f3f3ef;
   --color-inverse-muted: #a0a0a0;
-  --color-inverse-description: #999;
   --color-inverse-border: #303030;
-  --color-inverse-hover: #181818; /* Legacy; no current consumer. */
   --color-inverse-active: #101010; /* Hovered service row, selected process step. */
   --color-control-primary: #1b1c1e;
-  --color-white: #fff;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -98,14 +92,11 @@
   --radius-preview: 24px;
 
   /* Compatibility aliases used by existing sections. */
-  --canvas: var(--color-canvas);
   --surface: var(--color-surface);
   --story-background: var(--color-section);
   --ink: var(--color-text);
   --muted: var(--color-text-support);
-  --border: var(--color-border);
   --mist-blue: var(--color-accent-soft);
-  --blue-wash: var(--color-accent-wash);
   --deep-blue: var(--color-accent);
 }
 

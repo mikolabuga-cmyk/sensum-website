@@ -1,5 +1,5 @@
 (async()=>{
- const text=await fetch('../design-tokens.css').then(r=>r.text());
+ const text=await fetch('../design-tokens.css',{cache:'no-cache'}).then(r=>r.text());
  const tokens=[...text.matchAll(/(--[\w-]+):\s*([^;]+);/g)];
  for(const [,name,value] of tokens){
   if(name.startsWith('--color-')){
