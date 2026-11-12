@@ -19,7 +19,8 @@
   --color-inverse-muted: #a0a0a0;
   --color-inverse-description: #999;
   --color-inverse-border: #303030;
-  --color-inverse-hover: #181818;
+  --color-inverse-hover: #181818; /* Legacy; no current consumer. */
+  --color-inverse-active: #101010; /* Hovered service row, selected process step. */
   --color-control-primary: #1b1c1e;
   --color-white: #fff;
   --space-1: 4px;

@@ -13,7 +13,7 @@
 @media (min-width: 901px) {
  .how-we-work[data-enhanced] .how-we-work__steps { display: flex; }
  .how-we-work[data-enhanced] .work-step { flex: 1 1 0; min-height: 520px; transition: flex-grow var(--motion-duration-service-expand) var(--motion-ease-out), background-color var(--motion-duration-service-background) ease; }
- .how-we-work[data-enhanced] .work-step[data-active] { flex-grow: 2.7; background-color: #101010; }
+ .how-we-work[data-enhanced] .work-step[data-active] { flex-grow: 2.7; background-color: var(--color-inverse-active); }
  .how-we-work[data-enhanced] .work-step__trigger { position: absolute; inset: 24px; width: auto; min-height: 0; z-index: 1; }
  .how-we-work[data-enhanced] .work-step:first-child .work-step__trigger { left: 0; }
  .how-we-work[data-enhanced] .work-step__title { max-width: 13ch; }

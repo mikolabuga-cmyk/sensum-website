@@ -6,7 +6,7 @@ Use for token changes, new components, section changes and Storybook releases. M
 
 - [ ] Identify affected component, section, stories and shared tokens.
 - [ ] Preserve approved content and recent explicit user decisions.
-- [ ] Apply current Google Sans and light/inverse website system; do not revive superseded typography or styling.
+- [ ] Apply the live system recorded in `DESIGN-SYSTEM.md`: Google Sans only, light paper plus inverse chapters, dot/particle graphics, no brand accent hue. Do not revive superseded typography or styling.
 - [ ] Record new intentional exceptions with their reason and owner/request.
 - [ ] Limit the change to its intended scope; do not include unrelated edits in a publish.
 
@@ -24,12 +24,17 @@ Use for token changes, new components, section changes and Storybook releases. M
 
 - [ ] Rest, hover, active/selected and focus states are represented where supported.
 - [ ] Light/dark header content stays readable over each section.
-- [ ] Shared heading timing matches between Selected works and What we do; their intentional 500/400 weight distinction remains.
+- [ ] Section headings and narrative use weight 400; the hero headline stays 500. Selected works and What we do share heading timing.
 - [ ] Narrative and team statement share typography and reading behavior.
+- [ ] Paper surface joins continue the 4px dot rhythm without a visible seam between sections.
 - [ ] Services show four visible rows and capability groups; title/description/orb alignment remains coherent.
-- [ ] Team bio, portrait and member switcher retain their approved hierarchy and copy.
+- [ ] Hidden components (team portraits, product clarity, Design Team Extension) stay hidden unless a change restores them; if restored, they retain their approved hierarchy and copy.
+- [ ] Loader releases within 4 seconds, returns refreshes to the top and never blocks the page if its engine fails.
+- [ ] Gallery pin enters, scrubs and exits cleanly in both directions; without WebGL the images stay in normal flow.
+- [ ] Why-us block expansion, benefit icons and footer particle wordmark resolve to readable static states under reduced motion and forced colours.
 - [ ] Loading, missing-image and renderer-failure states are deliberate.
-- [ ] Each viewport has one primary visual treatment; decorative effects do not compromise text.
+- [ ] Each section has one particle/point treatment; decorative effects do not compromise text.
+- [ ] New icons follow the dot construction and `currentColor`; copy follows the Voice section.
 
 ## Interaction and accessibility
 

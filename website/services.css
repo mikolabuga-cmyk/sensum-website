@@ -1,6 +1,6 @@
 /* Editorial service rows with a decorative hover preview. */
 .services-stack {
-  --service-hover-background: #101010;
+  --service-hover-background: var(--color-inverse-active);
   --services-ink: var(--color-inverse-text);
   --services-muted: var(--color-inverse-muted);
   margin: 0; padding: 0; color: var(--services-ink); background: var(--color-inverse-canvas);
