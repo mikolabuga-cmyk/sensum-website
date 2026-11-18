@@ -19,8 +19,9 @@
     const visual = document.createElement('span');
     visual.setAttribute('aria-hidden', 'true');
     const chars = [];
-    text.split(/(\s+)/).forEach(token => {
-      if (/^\s+$/.test(token)) { visual.append(document.createTextNode(token)); return; }
+    const appendTokens = (target, value) => value.split(/(\s+)/).forEach(token => {
+      if (!token) return;
+      if (/^\s+$/.test(token)) { target.append(document.createTextNode(token)); return; }
       const word = document.createElement('span');
       word.className = `${prefix}__word`;
       Array.from(token).forEach(letter => {
@@ -30,8 +31,18 @@
         word.append(char);
         chars.push({ element: char, value: -1 });
       });
-      visual.append(word);
+      target.append(word);
     });
+    // Inline accents (an <em> in a heading) keep their element, so their styling survives the split.
+    const nodes = element.children?.length && element.childNodes ? Array.from(element.childNodes) : null;
+    if (nodes) nodes.forEach(node => {
+      if (node.nodeType === 1) {
+        const shell = node.cloneNode(false);
+        appendTokens(shell, node.textContent);
+        visual.append(shell);
+      } else appendTokens(visual, node.textContent);
+    });
+    else appendTokens(visual, text);
     element.replaceChildren(accessible, visual);
     return chars;
   }

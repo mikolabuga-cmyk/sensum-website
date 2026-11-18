@@ -42,4 +42,22 @@ for(const name of [...names,'navigation-dark']){
  const style=`body{background:${dark?'var(--color-inverse-canvas)':'var(--color-section)'}} ${name.startsWith('navigation')?'.header-chrome{position:relative!important}body{min-height:400px}':''}`;
  output('design-system/previews/'+name+'.html',`<!doctype html><html ${attributes}><head><base href="../../">${previewHead}<style>${style}</style></head><body>${['hero-v4','site-loader'].includes(name)?expand('site-loader')+expand('navigation'):''}<main id="main">${markup}</main></body></html>`);
 }
-console.log(`${check?'Verified':'Built'} homepage and ${names.length} component previews.`);
+// Case studies: cases/<slug>.html is the content; cases/_shell.html is the page around it.
+// Pages are written to work/<slug>.html and share the homepage header and footer.
+const caseDir=path.join(root,'cases');
+const shell=fs.readFileSync(path.join(caseDir,'_shell.html'),'utf8');
+const escapeHtml=text=>text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const cases=fs.readdirSync(caseDir).filter(n=>n.endsWith('.html')&&!n.startsWith('_'));
+for(const file of cases){
+ const source=fs.readFileSync(path.join(caseDir,file),'utf8');
+ const meta=source.match(/^<!-- case: (\{.*\}) -->\n/);
+ if(!meta)throw Error('Missing case metadata comment: cases/'+file);
+ const {title,description,cta}=JSON.parse(meta[1]);
+ // Section links in the shared header point back at the homepage.
+ const navigation=expand('navigation').replace(/href="#/g,'href="../#');
+ const footer=expand('footer').replace("Let's build together",escapeHtml(cta));
+ const values={title:escapeHtml(title),description:escapeHtml(description),navigation,footer,content:source.slice(meta[0].length).trimEnd()};
+ if(source.includes('case-tbd'))console.warn(`Placeholder figures remain in cases/${file}; replace or remove them before publishing.`);
+ output('work/'+file,shell.replace(/\{\{(\w+)\}\}/g,(_,key)=>values[key]));
+}
+console.log(`${check?'Verified':'Built'} homepage, ${names.length} component previews and ${cases.length} case ${cases.length===1?'study':'studies'}.`);

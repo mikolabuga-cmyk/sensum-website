@@ -1,0 +1,179 @@
+/* Case study pages. Built from the shared tokens: paper surfaces, one inverse
+   chapter, Google Sans at 400. Colour comes from the product media only. */
+.case-page { background: var(--color-gallery-surface); color: var(--color-text); }
+
+/* The homepage paper (why-work.css), drawn so that no join can show:
+   - one continuous 4px dot grid across the whole page, anchored to its bottom
+     edge so the rhythm carries on into the footer's grid;
+   - the silver pools belong to a light chapter (the run of sections between
+     dark ones) and fade out at its top and bottom, so every edge meets flat paper. */
+.case {
+  background:
+    radial-gradient(rgb(26 37 48 / .084) .55px, transparent .7px) 0 bottom / 4px 4px,
+    var(--color-gallery-surface);
+}
+.case-chapter { position: relative; isolation: isolate; }
+.case-chapter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 14% 74%, #a9aaa750, transparent 32%),
+    radial-gradient(ellipse at 75% 18%, #a9aaa75c, transparent 43%),
+    radial-gradient(ellipse at 52% 90%, #c1c2bf70, transparent 40%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 min(300px, 25%), #000 calc(100% - min(300px, 25%)), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 min(300px, 25%), #000 calc(100% - min(300px, 25%)), transparent);
+}
+@media print, (forced-colors: active) {
+  .case, .case-chapter::before { background: Canvas; }
+}
+.case { display: block; padding-top: 96px; }
+.case h1, .case h2, .case h3, .case p, .case dl, .case dd, .case figure { margin: 0; }
+.case h2, .case h3 { font-family: var(--font-display); font-weight: var(--weight-regular); text-wrap: balance; }
+.case em, .case h1 em { font-style: normal; font-weight: var(--weight-regular); color: var(--color-text-secondary); background: none; }
+.case img, .case video { display: block; width: 100%; height: auto; }
+.case-label { font: var(--weight-regular) var(--type-label-size)/1.4 var(--font-body); color: var(--color-text-secondary); margin-bottom: 18px !important; }
+
+/* Hero */
+.case-hero { padding: clamp(32px, 5vw, 88px) var(--gutter) 0; }
+.case-hero h1 { max-width: 14ch; margin-top: 0; font-size: clamp(44px, 7vw, 112px); line-height: 1; }
+.case-dek { max-width: 62ch; margin-top: clamp(24px, 2.6vw, 40px) !important; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.6; letter-spacing: -.02em; color: var(--color-text-support); text-wrap: pretty; }
+.case-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 var(--grid-gap); margin-top: clamp(40px, 4.5vw, 72px) !important; border-top: 1px solid rgb(26 37 48 / .16); }
+.case-facts div { padding-top: 16px; }
+.case-facts dt { font-size: 14px; line-height: 1.4; color: var(--color-text-secondary); }
+.case-facts dd { margin-top: 4px; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.35; letter-spacing: -.015em; }
+
+/* Hero outcome: the numbers come before the story */
+.case-stats--hero { margin-top: clamp(40px, 4.5vw, 72px) !important; }
+.case-stats.case-stats--hero dt { font-size: clamp(44px, 5.2vw, 88px); }
+/* Description over the first stat columns; project facts in the last one, so
+   they line up with the final outcome figure whether there are 3 or 4 of them. */
+.case-hero { --case-cols: 4; }
+.case-hero:has(.case-stats--3) { --case-cols: 3; }
+.case-intro { display: grid; grid-template-columns: repeat(var(--case-cols), minmax(0, 1fr)); column-gap: var(--grid-gap); row-gap: 28px; align-items: start; margin-top: clamp(24px, 2.6vw, 40px); }
+.case-intro .case-dek { grid-column: 1 / span calc(var(--case-cols) - 1); margin-top: 0 !important; }
+.case-facts.case-facts--compact { grid-column: var(--case-cols); display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 16px; align-content: start; margin-top: 0 !important; padding-top: 6px; border-top: 0; }
+.case-facts--compact div { display: contents; }
+.case-facts--compact dt { font-size: 14px; line-height: 22px; }
+.case-facts--compact dd { margin-top: 0; font-size: 16px; line-height: 22px; color: var(--color-text); }
+/* Too narrow for label and value side by side: stack each label above its value. */
+@media (max-width: 1360px) {
+  .case-facts.case-facts--compact { grid-template-columns: minmax(0, 1fr); row-gap: 0; padding-top: 0; }
+  .case-facts--compact div + div dt { margin-top: 12px; }
+}
+.case-hero-note { margin-top: 12px !important; font-size: 13px; line-height: 1.4; color: var(--color-text-secondary); }
+
+/* Placeholder figures, visible in review. The build warns while any remain. */
+.case-tbd { padding: 0 .12em; border-radius: 6px; outline: 1px dashed #c9a46a; outline-offset: 2px; background: #faf1e2; color: #8a5a17; }
+
+/* Media: real product on a neutral rounded mat */
+.case-media { padding: clamp(40px, 4.5vw, 80px) var(--gutter) 0; }
+.case-section .case-media { padding-inline: 0; }
+.case-media img, .case-media video { border-radius: 24px; border: 1px solid rgb(26 37 48 / .08); background: #e9e8e3; }
+.case-media figcaption { margin-top: 14px; font-size: 14px; line-height: 1.4; color: var(--color-text-secondary); }
+
+/* A screenshot that carries its own device frame: match its corner so no dark tips show. */
+.case-media--device img { border: 0; border-radius: 3.2% / 5.05%; }
+
+/* Key question: the one inverse chapter */
+.case-question { margin-top: var(--section-space); padding: var(--section-space) var(--gutter); background: var(--color-inverse-canvas); color: var(--color-inverse-text); }
+.case-question .case-label { color: var(--color-inverse-muted); }
+.case-question__text { max-width: 24ch; font-family: var(--font-display); font-size: clamp(32px, 4.6vw, 76px); line-height: 1.08; letter-spacing: -.05em; text-wrap: balance; }
+
+/* Sections */
+.case-section { padding: var(--section-space) var(--gutter) 0; }
+.case-section--surface { padding-bottom: 0; }
+.case-section__head h2 { max-width: 20ch; font-size: clamp(32px, 3.6vw, 56px); line-height: var(--type-heading-leading); letter-spacing: var(--type-heading-tracking); }
+.case-section__head--split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 4fr); gap: var(--grid-gap); align-items: end; }
+.case-lead { font-size: clamp(16px, 1.3vw, 19px); line-height: 1.55; color: var(--color-text-support); }
+
+/* Decisions: each one sits beside its evidence */
+.decision__num { display: block; font-size: 14px; line-height: 1.4; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; }
+.decision h3 { font-size: var(--type-title-size); line-height: var(--type-title-leading); letter-spacing: var(--type-title-tracking); font-weight: var(--weight-medium); }
+.decision p { font-size: 16px; line-height: 1.55; color: var(--color-text-support); }
+.decision--key { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--grid-gap); align-items: start; margin-top: clamp(40px, 4.5vw, 72px); padding-top: 24px; border-top: 1px solid var(--color-text); }
+.decision--key .decision__copy { display: grid; gap: 14px; position: sticky; top: 112px; }
+.decision__status { width: fit-content; padding: 5px 12px; border-radius: var(--radius-pill); background: var(--color-control-primary); color: #fff; font-size: 13px; line-height: 1.4; }
+.decision__compare { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.decision__compare figure { padding: clamp(12px, 1.4vw, 20px); border-radius: 24px; background: #e9e8e3; }
+.decision__compare figure + figure { background: #f1e6cf; }
+.decision__compare figcaption { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 12px; font-size: 14px; line-height: 1.4; }
+.decision__compare figcaption b { font-weight: var(--weight-medium); }
+.decision__compare figcaption span { color: var(--color-text-secondary); text-align: right; }
+.decision__compare video { border-radius: 10px; }
+.decision-rows { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--grid-gap); margin-top: clamp(40px, 4.5vw, 72px); }
+.decision-rows .decision { display: grid; gap: 12px; align-content: start; padding-top: 24px; border-top: 1px solid rgb(26 37 48 / .16); }
+.decision-rows .decision p { max-width: 46ch; }
+.decision-rows--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.decision-rows--3 .decision { border-top-color: var(--color-text); }
+.decision-rows .decision__status { margin-top: 6px; }
+.decision-rows + .decision__compare { margin-top: clamp(40px, 4.5vw, 72px); }
+
+.decision--media { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--grid-gap); align-items: start; margin-top: clamp(40px, 4.5vw, 72px); padding-top: 24px; border-top: 1px solid rgb(26 37 48 / .16); }
+.case-section__head + .decision--media { border-top-color: var(--color-text); }
+.decision--media .decision__copy { display: grid; gap: 14px; position: sticky; top: 112px; }
+.decision__meta { display: grid; gap: 14px; margin-top: 10px !important; }
+.decision__meta dt { font-size: 14px; line-height: 1.4; color: var(--color-text-secondary); }
+.decision__meta dd { margin-top: 2px; font-size: 16px; line-height: 1.55; color: var(--color-text-support); }
+.decision__visual { padding: clamp(16px, 2.4vw, 40px); border-radius: 24px; background: #e9e8e3; }
+.decision__visual img { border-radius: 12px; box-shadow: 0 24px 60px rgb(26 37 48 / .10); }
+.decision__visual--narrow img { max-width: 720px; margin-inline: auto; }
+.decision__visual--slim img { max-width: 440px; margin-inline: auto; }
+
+/* Closing: one statement on the dark block used by "Why sensum?" on the homepage */
+.case-closing { padding: var(--section-space) var(--gutter); }
+.case-closing__panel {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  align-items: end;
+  min-height: clamp(20rem, 36vw, 30rem);
+  padding: clamp(28px, 3.2vw, 56px);
+  color: var(--color-inverse-text);
+}
+.case-closing__panel::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: clamp(24px, 3vw, 42px);
+  background: var(--color-control-primary);
+}
+.case-closing__text { max-width: 22ch; font: var(--weight-regular) var(--type-heading-size)/var(--type-heading-leading) var(--font-display); letter-spacing: var(--type-heading-tracking); text-wrap: balance; }
+.case-closing__text em { color: var(--color-inverse-muted); }
+.case-closing__panel { align-content: end; gap: clamp(20px, 2vw, 32px); }
+/* The service orb from the homepage's "What we do" rows, as a pointer to the service behind the case */
+.case-closing__orb { position: absolute; top: 50%; right: clamp(32px, 6vw, 120px); width: clamp(160px, 18.7vw, 270px); aspect-ratio: 1; transform: translateY(-50%); color: var(--color-inverse-text); pointer-events: none; }
+@media (max-width: 767px) { .case-closing__orb { position: static; width: 132px; margin: 0 0 8px -12px; transform: none; } }
+.case-closing__orb svg { display: block; width: 100%; height: auto; }
+.case-closing__note { max-width: 70ch; font-size: 14px; line-height: 1.5; color: var(--color-inverse-muted); }
+@media (max-width: 767px) { .case-closing__text { font-size: var(--type-heading-size-mobile); } }
+
+.case-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--grid-gap); margin-top: clamp(40px, 4.5vw, 72px) !important; }
+.case-stats div { padding-top: 20px; border-top: 1px solid var(--color-text); }
+.case-stats dt { font-family: var(--font-display); font-size: clamp(40px, 4.4vw, 72px); line-height: 1; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.case-stats dd { margin-top: 12px; max-width: 24ch; font-size: 15px; line-height: 1.45; color: var(--color-text-secondary); }
+.case-stats--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.case-note { max-width: 78ch; margin-top: 32px !important; font-size: 14px; line-height: 1.5; color: var(--color-text-secondary); }
+
+@media (max-width: 960px) {
+  .case-facts, .case-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 24px; }
+  .case-section__head--split, .decision--key, .decision--media, .case-intro { grid-template-columns: minmax(0, 1fr); }
+  .case-intro .case-dek, .case-facts.case-facts--compact { grid-column: 1; }
+  .decision-rows--3 { grid-template-columns: minmax(0, 1fr); }
+  .decision--key .decision__copy, .decision--media .decision__copy { position: static; }
+  .case-stats--3 { grid-template-columns: minmax(0, 1fr); }
+  .case-stats.case-stats--hero { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .case { padding-top: 86px; }
+  .decision__compare, .decision-rows, .decision-rows--3 { grid-template-columns: minmax(0, 1fr); }
+  .case-media img, .case-media video, .decision__compare figure, .decision__visual { border-radius: 16px; }
+  .case-media--device img { border-radius: 3.2% / 5.05%; }
+}
+@media print { .case-question { background: none; color: inherit; } }
