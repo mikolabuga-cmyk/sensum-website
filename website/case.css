@@ -102,14 +102,14 @@
 .decision__compare figcaption { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 12px; font-size: 14px; line-height: 1.4; }
 .decision__compare figcaption b { font-weight: var(--weight-medium); }
 .decision__compare figcaption span { color: var(--color-text-secondary); text-align: right; }
-.decision__compare video { border-radius: 10px; }
+.decision__compare video, .decision__compare img { border-radius: 10px; }
 .decision-rows { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--grid-gap); margin-top: clamp(40px, 4.5vw, 72px); }
 .decision-rows .decision { display: grid; gap: 12px; align-content: start; padding-top: 24px; border-top: 1px solid rgb(26 37 48 / .16); }
 .decision-rows .decision p { max-width: 46ch; }
 .decision-rows--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .decision-rows--3 .decision { border-top-color: var(--color-text); }
 .decision-rows .decision__status { margin-top: 6px; }
-.decision-rows + .decision__compare { margin-top: clamp(40px, 4.5vw, 72px); }
+.decision-rows + .decision__compare, .decision + .decision__compare { margin-top: clamp(40px, 4.5vw, 72px); }
 
 .decision--media { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: var(--grid-gap); align-items: start; margin-top: clamp(40px, 4.5vw, 72px); padding-top: 24px; border-top: 1px solid rgb(26 37 48 / .16); }
 .case-section__head + .decision--media { border-top-color: var(--color-text); }
@@ -121,6 +121,7 @@
 .decision__visual img { border-radius: 12px; box-shadow: 0 24px 60px rgb(26 37 48 / .10); }
 .decision__visual--narrow img { max-width: 720px; margin-inline: auto; }
 .decision__visual--slim img { max-width: 440px; margin-inline: auto; }
+.decision__visual--cutout img { border-radius: 0; box-shadow: none; filter: drop-shadow(0 20px 28px rgb(26 37 48 / .14)); }
 
 /* Closing: one statement on the dark block used by "Why sensum?" on the homepage */
 .case-closing { padding: var(--section-space) var(--gutter); }
