@@ -432,38 +432,81 @@
   .plinth .u-dock .row2, .plinth .phone--s .u-dock .row2 { grid-template-columns: 44px 1fr; }
   .plinth .u-ghost, .plinth .phone--s .u-ghost { width: 44px; height: 44px; }
 
-  /* Customer journey (reconstructed) */
-  .plinth .journey { margin-top: 16px; padding: clamp(24px, 3vw, 44px); border-radius: var(--radius-panel); background: var(--color-surface); border: 1px solid #ebeae5; }
-  .plinth .journey-head { max-width: 760px; }
-  .plinth .journey-head h3 { margin-bottom: 10px; }
-  .plinth .journey-head p { font-size: 15px; line-height: 1.5; color: var(--color-text-secondary); }
-  .plinth .j-curve { margin: 36px 0 16px; padding: 8px 0 0; }
-  .plinth .j-curve svg { display: block; width: 100%; height: auto; overflow: visible; }
-  .plinth .jc-grid { stroke: #d5dce2; stroke-width: 1; stroke-dasharray: 5 6; }
-  .plinth .jc-label { font-family: var(--font-body); font-size: 11px; letter-spacing: .08em; fill: var(--color-text-secondary); }
-  .plinth .jc-label--hi { fill: #d9542f; }
-  .plinth .jc-dot { fill: #fff; stroke: var(--color-text); stroke-width: 3; }
-  .plinth .jc-dot--low { stroke: #d9542f; }
-  .plinth .j-swipe { display: none; }
-  .plinth .jc-zone { fill: #fbeee9; }
-  .plinth .jc-drop { stroke: #c9cfd4; stroke-width: 1; stroke-dasharray: 2 4; }
-  .plinth .jc-drop.jc-hot { stroke: #e7a58f; }
-  .plinth .jc-name { font-family: var(--font-body); font-size: 17px; font-weight: 500; fill: var(--color-text); }
-  .plinth .jc-name.jc-hot { fill: #c2462a; }
-  .plinth .jc-q { font-family: var(--font-body); font-size: 14px; fill: var(--color-text-secondary); }
-
-  @media (max-width: 960px) {
-    .plinth .j-curve { overflow-x: auto; margin-inline: -4px; padding-bottom: 8px; }
-    .plinth .j-curve svg { min-width: 760px; }
-    .plinth .j-swipe { display: block; margin: 24px 0 0; font-size: 13px; color: var(--color-text-secondary); }
-    .plinth .j-swipe + .j-curve { margin-top: 8px; }
-  }
-
   /* Fit to the site's case layout */
   .plinth .proto-stage { background: #e9e8e3; border-radius: 24px; }
   .plinth .oldform { margin-top: clamp(40px, 4.5vw, 72px); border-radius: 24px; background: #e9e8e3; }
-  .plinth .journey { border-color: rgb(26 37 48 / .08); border-radius: 24px; }
-  .plinth .journey-head h3 { font-size: var(--type-title-size); line-height: var(--type-title-leading); letter-spacing: var(--type-title-tracking); }
+
+  /* Floating feature snapshots around the hero phone (after the home.ai hero): widget cards cluster
+     around the phone, one tucks behind it, one sits faded in the back; they stay still and slightly faded. */
+  .plinth .proto-stage > .phone { z-index: 2; }
+  .plinth .pf-layer { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .plinth .pf { --ink: #19191b; --mute: #8d8e92; --lime: #c3d85f; --wash: #eef4d4; --fill: #f2f2ef; --stripe: repeating-linear-gradient(-45deg, rgb(255 255 255 / .38) 0 6px, transparent 6px 12px);
+    position: absolute; padding: 18px; border-radius: 26px; background: #fff; color: var(--ink); font-size: 13px; line-height: 1.35; box-shadow: 0 20px 50px rgb(26 37 48 / .06);
+    opacity: .72; }
+  .plinth .pf small { display: block; color: var(--mute); font-size: 11.5px; }
+  .plinth .pf b { font-weight: 500; }
+  /* Style: wide card that slides under the phone's top-left corner */
+  .plinth .pf--style { top: 96px; right: calc(50% + 96px); width: 340px; padding-right: 96px; }
+  .plinth .pf--style b { display: block; margin-top: 2px; font-size: 17px; letter-spacing: -.02em; }
+  .plinth .pf-pills { display: flex; align-items: center; gap: 10px; margin: 14px 0 14px; }
+  .plinth .pf-pills span { width: 42px; height: 42px; border-radius: 12px; background: center / cover; }
+  .plinth .pf-pills span:first-child { box-shadow: 0 0 0 3px var(--lime); }
+  .plinth .pf-track { height: 22px; border-radius: 11px; background: var(--fill); overflow: hidden; }
+  .plinth .pf-track i { display: block; width: 33%; height: 100%; border-radius: 11px; background: var(--lime) var(--stripe); }
+  /* Cost breakdown: the big chart card */
+  .plinth .pf--bars { top: 330px; right: calc(50% + 230px); width: 300px; }
+  .plinth .pf-head { display: flex; justify-content: space-between; align-items: center; }
+  .plinth .pf-head b { font-size: 15px; }
+  .plinth .pf--bars strong { display: block; margin: 14px 0 2px; font-size: 26px; font-weight: 400; letter-spacing: -.04em; }
+  .plinth .pf-bars { display: flex; align-items: flex-end; gap: 8px; height: 104px; margin-top: 10px; }
+  .plinth .pf-bars i { flex: 1; border-radius: 9px; background: #e6e6e2; }
+  .plinth .pf-bars i.l { background: var(--lime) var(--stripe); }
+  .plinth .pf-axis { display: flex; gap: 8px; margin-top: 6px; }
+  .plinth .pf-axis span { flex: 1; text-align: center; font-size: 10px; color: var(--mute); }
+  /* Home: a pill card like the energy row */
+  .plinth .pf--home { top: 640px; right: calc(50% + 230px); width: 300px; display: grid; grid-template-columns: 42px 1fr auto; gap: 12px; align-items: center; padding: 14px 18px 14px 14px; border-radius: 999px; }
+  .plinth .pf-ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--wash); }
+  .plinth .pf-ic svg { width: 20px; height: 20px; fill: var(--lime); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
+  .plinth .pf--home strong { font-size: 30px; font-weight: 300; letter-spacing: -.05em; }
+  .plinth .pf--home strong small { display: inline; margin-left: 2px; font-size: 11px; letter-spacing: 0; }
+  /* Bonuses: right, top */
+  .plinth .pf--bonus { top: 150px; left: calc(50% + 240px); width: 250px; padding: 8px 18px; }
+  .plinth .pf-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
+  .plinth .pf-row + .pf-row { border-top: 1px solid #ebebe8; }
+  .plinth .pf-tog { position: relative; flex: none; width: 34px; height: 20px; border-radius: 10px; background: var(--lime); }
+  .plinth .pf-tog::after { content: ""; position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / .18); }
+  /* Timeline dial: large and faded in the back, like the thermostat */
+  .plinth .pf--dial { top: 420px; left: calc(50% + 280px); width: 260px; padding: 22px; text-align: center; opacity: .38; }
+  .plinth .pf-seg { display: grid; grid-template-columns: repeat(3, 1fr); padding: 3px; border-radius: 99px; background: var(--fill); }
+  .plinth .pf-seg span { padding: 6px 0; border-radius: 99px; font-size: 11px; color: var(--mute); }
+  .plinth .pf-seg span.sel { background: var(--lime); color: var(--ink); }
+  .plinth .pf-ring { position: relative; width: 168px; height: 168px; margin: 18px auto 4px; border-radius: 50%; background: conic-gradient(var(--lime) 0 58%, #ececea 58% 100%); }
+  .plinth .pf-ring::before { content: ""; position: absolute; inset: 16px; border-radius: 50%; background: #fff; box-shadow: 0 6px 18px rgb(0 0 0 / .06); }
+  .plinth .pf-ring div { position: absolute; inset: 0; display: grid; place-content: center; }
+  .plinth .pf-ring strong { font-size: 34px; font-weight: 400; letter-spacing: -.05em; line-height: 1; }
+  @media (max-width: 1180px) { .plinth .pf-layer { display: none; } }
+  /* The customer journey, laid along the drop-off bar under the old form */
+  .plinth .jbar { margin-top: clamp(32px, 3.5vw, 52px); }
+  .plinth .jbar-head { display: flex; justify-content: space-between; gap: 16px; margin: 0 0 14px; font-size: 15px; color: var(--color-text-support); }
+  .plinth .jbar-head b { font-weight: 500; color: var(--color-text); }
+  .plinth .jbar-head em { margin-left: 6px; font-style: normal; font-weight: 500; color: #c2462a; }
+  .plinth .jbar-track { position: relative; height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--color-text) 0 40%, #d9542f 40% 80%, #d7d6d0 80%); }
+  .plinth .jbar-track i { position: absolute; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: #fff; border: 3px solid var(--color-text); box-sizing: border-box; }
+  .plinth .jbar-track i.h { border-color: #d9542f; }
+  .plinth .jbar-stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 16px 0 0; padding: 0; list-style: none; }
+  .plinth .jbar-stages li { padding: 0 8px; text-align: center; }
+  .plinth .jbar-stages b { display: block; font-size: 16px; font-weight: 500; }
+  .plinth .jbar-stages li.h b { color: #c2462a; }
+  .plinth .jbar-stages q { display: block; margin-top: 4px; font-size: 14px; line-height: 1.4; color: var(--color-text-secondary); quotes: "\201C" "\201D"; }
+  .plinth .jbar-stages small { display: block; margin-top: 6px; font-size: 13px; color: var(--color-text-support); }
+  @media (max-width: 760px) {
+    .plinth .jbar-head { flex-direction: column; gap: 4px; }
+    .plinth .jbar-track i { display: none; }
+    .plinth .jbar-stages { grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 20px; }
+    .plinth .jbar-stages li { position: relative; padding: 0 0 0 22px; text-align: left; }
+    .plinth .jbar-stages li::before { content: ""; position: absolute; left: 0; top: 4px; width: 12px; height: 12px; border-radius: 50%; border: 3px solid var(--color-text); box-sizing: border-box; }
+    .plinth .jbar-stages li.h::before { border-color: #d9542f; }
+  }
   .plinth .decision__visual { display: flex; justify-content: center; align-items: center; min-height: 640px; }
   /* The old form and its callouts sit together in the middle of the panel on wide screens */
   @media (min-width: 961px) { .plinth .af { grid-template-columns: minmax(0, 320px) minmax(0, 420px); justify-content: center; } }
