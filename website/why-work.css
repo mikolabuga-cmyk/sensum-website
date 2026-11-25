@@ -118,6 +118,9 @@
 /* Image surfaces share the same landscape crop in WebGL and document flow. */
 .why-work .benefit-card--image { padding: 0; min-height: 0; aspect-ratio: 1.45; }
 .benefit-card--image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.benefit-card--video > img { display: none; }
+.benefit-card--video video { display: block; width: 100%; height: 100%; object-fit: cover; }
+
 
 /* One pinned chapter: opening copy dissolves, then the gallery takes its place. */
 @media screen and (min-width: 1024px) and (min-height: 760px) and (prefers-reduced-motion: no-preference) {

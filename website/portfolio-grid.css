@@ -230,12 +230,30 @@
 }
 .portfolio-project__preview.fluid-button--ready::before,
 .portfolio-project__preview.fluid-button--ready::after { display: none; }
+.portfolio-project__css-light {
+  background:
+    radial-gradient(ellipse 24% 16% at calc(16% + var(--light-offset, 0%)) 104%, rgb(196 155 65 / .72), rgb(196 155 65 / 0) 100%),
+    radial-gradient(ellipse 26% 22% at calc(35% + var(--light-offset, 0%)) 106%, rgb(80 182 137 / .66), rgb(80 182 137 / 0) 100%),
+    radial-gradient(ellipse 26% 25% at calc(47% + var(--light-offset, 0%)) 107%, rgb(80 190 215 / .72), rgb(80 190 215 / 0) 100%),
+    radial-gradient(ellipse 25% 23% at calc(60% + var(--light-offset, 0%)) 106%, rgb(145 110 218 / .66), rgb(145 110 218 / 0) 100%),
+    radial-gradient(ellipse 28% 20% at calc(74% + var(--light-offset, 0%)) 105%, rgb(221 116 170 / .64), rgb(221 116 170 / 0) 100%),
+    radial-gradient(ellipse 24% 14% at calc(91% + var(--light-offset, 0%)) 103%, rgb(230 152 100 / .64), rgb(230 152 100 / 0) 100%);
+  background-size: 105% 100%;
+  background-repeat: no-repeat;
+  animation: portfolio-light-breathe 5s ease-in-out infinite alternate paused;
+}
+@keyframes portfolio-light-breathe {
+  from { background-position: 0% 0%; background-size: 105% 100%; }
+  to { background-position: 100% 0%; background-size: 110% 108%; }
+}
 @media (hover: hover) and (pointer: fine) {
   .portfolio-project__preview:hover .portfolio-project__fluid-surface { opacity: 1; }
+  .portfolio-project__preview:hover .portfolio-project__css-light { animation-play-state: running; }
 }
 .portfolio-project__link:focus-visible .portfolio-project__fluid-surface { opacity: 1; }
+.portfolio-project__link:focus-visible .portfolio-project__css-light { animation-play-state: running; }
 @media (prefers-reduced-motion: reduce) {
-  .portfolio-project__fluid-surface { transition: none; }
+  .portfolio-project__fluid-surface { transition: none; animation: none; }
 }
 @media (forced-colors: active), print {
   .portfolio-project__fluid-surface { display: none; }

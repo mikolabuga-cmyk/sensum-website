@@ -9,6 +9,8 @@
   color: var(--ink);
 }
 .site-footer__contact {
+  position: relative;
+  top: 64px;
   display: grid;
   place-content: center;
   justify-items: center;
@@ -19,6 +21,7 @@
 .site-footer__contact h2 { margin: 0; font-size: clamp(36px, 9vw, 72px); font-weight: var(--weight-regular); }
 .site-footer__mark {
   position: relative;
+  top: 56px;
   display: grid;
   place-items: center;
   color: #000;
@@ -39,4 +42,27 @@
 @media (forced-colors: active), print {
   .site-footer__mark[data-ready] span { opacity: 1; }
   .site-footer__mark canvas { display: none; }
+}
+
+/* Fit the active word and ease the sentence into its new width. */
+.footer-words {
+  position: relative;
+  display: inline-block;
+  vertical-align: bottom;
+  transition: width 620ms cubic-bezier(.22, 1, .36, 1);
+}
+.footer-word { position: absolute; left: 0; top: 0; width: max-content; visibility: hidden; white-space: nowrap; }
+.footer-word.is-current { position: relative; visibility: visible; }
+.footer-word > span { display: inline-block; }
+.footer-word[data-phase="out"] > span {
+  animation: eyebrow-out 280ms ease-in both;
+  animation-delay: calc(var(--i) * 22ms);
+}
+.footer-word[data-phase="in"] > span {
+  animation: eyebrow-in 420ms cubic-bezier(.22, 1, .36, 1) both;
+  animation-delay: calc(var(--i) * 24ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-word > span { animation: none !important; }
+  .footer-words { transition: none; }
 }

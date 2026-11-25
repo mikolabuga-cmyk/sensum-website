@@ -1,4 +1,4 @@
-import { createCardSurfaces } from './why-work-surface.js?v=20261104-float2';
+import { createCardSurfaces } from './why-work-surface.js?v=20261119-native-video';
 import { cardOrbitPose, cardPointerPose, cardFloatPose } from './why-work-orbit.js?v=20261105-gallery-exit';
 
 (async () => {
@@ -8,6 +8,9 @@ import { cardOrbitPose, cardPointerPose, cardFloatPose } from './why-work-orbit.
   const narrative = section.closest('.narrative');
   const scene = section.querySelector('.why-work__scene');
   const cards = [...section.querySelectorAll('.benefit-card')];
+  const video = cards.at(-1)?.querySelector('video');
+  const motionControl = document.querySelector('.motion-toggle');
+  const finalCenter = (cards.length - 1 + 1.8) / (cards.length - 1 + 3.6);
   await document.fonts.ready;
   // Decode before creating GPU textures; a failed asset leaves the normal image layout.
   try {
@@ -19,6 +22,7 @@ import { cardOrbitPose, cardPointerPose, cardFloatPose } from './why-work-orbit.
     if (!surfaces) return;
     section.dataset.floating = '';
     section.dataset.curved = '';
+    if (video) section.dataset.videoExpansion = '';
     const heading = section.querySelector('.why-work__heading');
     // The homepage shares the opening paragraph's sticky viewport. Standalone
     // previews retain their own pin; never nest one pin inside another.
@@ -34,17 +38,10 @@ import { cardOrbitPose, cardPointerPose, cardFloatPose } from './why-work-orbit.
     });
     const motion = window.SensumTextMotion;
     const headingMarkup = heading.innerHTML;
-    const closingHeading = section.querySelector('.why-work__heading--closing');
-    const closingMarkup = closingHeading.innerHTML;
     let paintHeadingFrame = () => {};
     if (motion) {
       const chars = motion.split(heading, 'text-reveal');
-      const closingChars = motion.split(closingHeading, 'text-reveal');
-      closingHeading.dataset.reveal = 'active';
-      motion.paint(closingChars, 0);
       // distance = 0 is the final image's foreground position on the finite orbit.
-      const finalCenter = (cards.length - 1 + 1.8) / (cards.length - 1 + 3.6);
-      let closingCurrent = 0;
       const reveal = { progress: 0 };
       heading.dataset.reveal = 'active';
       // Match the preceding paragraph: narrow letter feather, 60vh sweep,
@@ -56,10 +53,7 @@ import { cardOrbitPose, cardPointerPose, cardFloatPose } from './why-work-orbit.
         if (Math.abs(reveal.progress - current) < motion.tokens.epsilon) current = reveal.progress;
         const exit = motion.clamp((orbit.progress - finalCenter) / .035);
         motion.paint(chars, current * (1 - exit));
-        const closingTarget = motion.clamp((orbit.progress - finalCenter - .035) / (motion.tokens.viewportSpan / 6));
-        closingCurrent += (closingTarget - closingCurrent) * motion.damping(time, previousTime);
-        if (Math.abs(closingTarget - closingCurrent) < motion.tokens.epsilon) closingCurrent = closingTarget;
-        motion.paint(closingChars, closingCurrent);
+
       };
       gsap.to(reveal, {
         progress: 1, ease: 'none',
@@ -84,12 +78,28 @@ import { cardOrbitPose, cardPointerPose, cardFloatPose } from './why-work-orbit.
     };
     measure();
     let frame = 0, elapsed = 0, lastTime = 0;
+    let playing = false;
+    const syncVideo = shouldPlay => {
+      if (!video || shouldPlay === playing) return;
+      playing = shouldPlay;
+      if (shouldPlay) video.play().catch(() => { /* Retain the poster if autoplay is unavailable. */ });
+      else video.pause();
+    };
     const draw = () => {
+      const rawExpansion = clamp(0, 1, (orbit.progress - finalCenter) / (.90 - finalCenter));
+      const expansion = rawExpansion * rawExpansion * (3 - 2 * rawExpansion);
       cards.forEach((card, index) => {
-        const pose = cardOrbitPose(orbit.progress, index, cards.length, spacing, rise);
+        const finalVideo = video && index === cards.length - 1;
+        const pose = cardOrbitPose(finalVideo ? Math.min(orbit.progress, finalCenter) : orbit.progress, index, cards.length, spacing, rise);
         const drift = cardFloatPose(elapsed, index, pose.opacity);
-        for (const key of Object.keys(drift)) pose[key] += drift[key];
-        surfaces.set(index, pose, cardPointerPose(pointer, pose.foreground, lifts[index].amount));
+        for (const key of Object.keys(drift)) pose[key] += drift[key] * (finalVideo ? 1 - expansion : 1);
+        const interaction = cardPointerPose(pointer, pose.foreground, lifts[index].amount);
+        if (finalVideo) {
+          for (const key of Object.keys(interaction)) interaction[key] *= 1 - expansion;
+          surfaces.expand(index, expansion);
+          syncVideo(visible && !document.hidden && pose.opacity > .01 && motionControl?.dataset.paused !== 'true');
+        }
+        surfaces.set(index, pose, interaction);
       });
       surfaces.draw();
     };
@@ -108,11 +118,12 @@ import { cardOrbitPose, cardPointerPose, cardFloatPose } from './why-work-orbit.
     const visibility = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
       if (visible) render();
-      else { cancelAnimationFrame(frame); frame = 0; lastTime = 0; }
+      else { cancelAnimationFrame(frame); frame = 0; lastTime = 0; syncVideo(false); }
     });
     visibility.observe(scene);
     const tabVisibility = () => {
       cancelAnimationFrame(frame); frame = 0; lastTime = 0;
+      if (document.hidden) syncVideo(false);
       if (!document.hidden) render();
     };
     document.addEventListener('visibilitychange', tabVisibility);
@@ -160,12 +171,12 @@ import { cardOrbitPose, cardPointerPose, cardFloatPose } from './why-work-orbit.
       if (motion) {
         delete heading.dataset.reveal;
         heading.innerHTML = headingMarkup;
-        delete closingHeading.dataset.reveal;
-        closingHeading.innerHTML = closingMarkup;
       }
       if (narrative) delete narrative.dataset.gallery;
       delete section.dataset.floating;
       delete section.dataset.curved;
+      delete section.dataset.videoExpansion;
+      syncVideo(false);
       scene.removeEventListener('pointermove', move);
       scene.removeEventListener('pointerleave', leave);
       gsap.killTweensOf([pointer, ...lifts]);

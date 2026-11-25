@@ -28,6 +28,7 @@ function textureFor(card) {
   const ctx = canvas.getContext('2d');
   ctx.scale(2, 2);
   const style = getComputedStyle(card);
+  ctx.save();
   ctx.beginPath(); ctx.roundRect(0, 0, CARD_WIDTH, CARD_HEIGHT, 20); ctx.clip();
   ctx.fillStyle = style.backgroundColor; ctx.fillRect(0, 0, CARD_WIDTH, CARD_HEIGHT);
   const image = card.querySelector('img');
@@ -36,20 +37,21 @@ function textureFor(card) {
   const scale = Math.max(CARD_WIDTH / image.naturalWidth, CARD_HEIGHT / image.naturalHeight);
   const width = image.naturalWidth * scale, height = image.naturalHeight * scale;
   ctx.drawImage(image, (CARD_WIDTH - width) / 2, (CARD_HEIGHT - height) / 2, width, height);
+  ctx.restore();
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
 }
 
 export function createCardSurfaces(host, cards, onContextLost) {
-  // These surfaces currently contain only images. Future controls
-  // retain their live DOM interaction instead of becoming inert texture pixels.
+  // Images and the muted film become visual textures. Interactive content
+  // retains the normal HTML layout instead of becoming inert texture pixels.
   if (cards.some(card => card.querySelector('a,button,input,select,textarea,[tabindex]'))) return null;
   let renderer;
   const owned = [];
   try {
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setClearColor(0x000000, 0);
     const world = new THREE.Scene();
@@ -57,11 +59,38 @@ export function createCardSurfaces(host, cards, onContextLost) {
     camera.position.z = 1400;
     const radius = Number(host.closest('.why-work').dataset.curvatureRadius) || DEFAULT_RADIUS;
     const geometry = curvedCardGeometry(radius); owned.push(geometry);
+    let viewportWidth = 1, viewportHeight = 1, cardScale = 1;
     const surfaces = cards.map((card, index) => {
       const texture = textureFor(card); owned.push(texture);
       texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
       const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: .015, side: THREE.DoubleSide }); owned.push(material);
-      const mesh = new THREE.Mesh(geometry, material); mesh.userData.cardIndex = index;
+      const video = card.querySelector('video');
+      let videoTexture, videoUniforms;
+      if (video) {
+        videoTexture = new THREE.VideoTexture(video);
+        videoTexture.colorSpace = THREE.SRGBColorSpace;
+        videoTexture.generateMipmaps = false;
+        owned.push(videoTexture);
+        videoUniforms = {
+          cardExtent: { value: new THREE.Vector2(CARD_WIDTH, CARD_HEIGHT) },
+          cardRadius: { value: 20 },
+        };
+        material.defines = { USE_UV: '' };
+        material.onBeforeCompile = shader => {
+          Object.assign(shader.uniforms, videoUniforms);
+          shader.fragmentShader = 'uniform vec2 cardExtent; uniform float cardRadius;\n' + shader.fragmentShader;
+          shader.fragmentShader = shader.fragmentShader.replace('#include <alphatest_fragment>', `
+            vec2 edge = abs((vUv - .5) * cardExtent) - cardExtent * .5 + cardRadius;
+            float distanceToEdge = length(max(edge, 0.)) + min(max(edge.x, edge.y), 0.) - cardRadius;
+            diffuseColor.a *= 1. - smoothstep(-.75, .25, distanceToEdge);
+            #include <alphatest_fragment>
+          `);
+        };
+      }
+      const cardGeometry = video ? geometry.clone() : geometry;
+      if (video) owned.push(cardGeometry);
+      const mesh = new THREE.Mesh(cardGeometry, material); mesh.userData.cardIndex = index;
+      if (video) mesh.frustumCulled = false; // Its geometry flattens during expansion.
       const group = new THREE.Group();
       const rotation = new THREE.Group();
       const interaction = new THREE.Group();
@@ -69,7 +98,7 @@ export function createCardSurfaces(host, cards, onContextLost) {
       rotation.add(interaction);
       group.add(rotation);
       world.add(group);
-      return { group, rotation, interaction, mesh };
+      return { group, rotation, interaction, mesh, video, texture, videoTexture, videoUniforms, expansion: -1 };
     });
     const canvas = renderer.domElement;
     canvas.className = 'why-work__canvas';
@@ -80,12 +109,31 @@ export function createCardSurfaces(host, cards, onContextLost) {
     canvas.addEventListener('webglcontextlost', lost);
     return {
       resize(width, height) {
+        viewportWidth = width; viewportHeight = height;
         renderer.setSize(width, height, false);
         const scale = Math.max(340, Math.min(width * .33, 600)) / CARD_WIDTH;
-        surfaces.forEach(({ interaction }) => interaction.scale.setScalar(scale));
+        cardScale = scale;
+        surfaces.forEach(surface => { surface.interaction.scale.setScalar(scale); surface.expansion = -1; });
         camera.aspect = width / height;
         camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(height / 2800));
         camera.updateProjectionMatrix();
+      },
+      expand(index, progress) {
+        const surface = surfaces[index];
+        if (!surface.video || surface.expansion === progress) return;
+        surface.expansion = progress;
+        surface.mesh.scale.set(
+          THREE.MathUtils.lerp(1, viewportWidth / (CARD_WIDTH * cardScale), progress),
+          THREE.MathUtils.lerp(1, viewportHeight / (CARD_HEIGHT * cardScale), progress), 1);
+        const positions = surface.mesh.geometry.attributes.position;
+        const original = geometry.attributes.position;
+        for (let i = 0; i < positions.count; i++) {
+          const flatX = (surface.mesh.geometry.attributes.uv.getX(i) - .5) * CARD_WIDTH;
+          positions.setXYZ(i, THREE.MathUtils.lerp(original.getX(i), flatX, progress), original.getY(i), original.getZ(i) * (1 - progress));
+        }
+        positions.needsUpdate = true;
+        surface.videoUniforms.cardExtent.value.set(CARD_WIDTH * cardScale * surface.mesh.scale.x, CARD_HEIGHT * cardScale * surface.mesh.scale.y);
+        surface.videoUniforms.cardRadius.value = 20 * cardScale * (1 - progress);
       },
       set(index, pose, pointer) {
         const { group, rotation, interaction, mesh } = surfaces[index];
@@ -96,7 +144,24 @@ export function createCardSurfaces(host, cards, onContextLost) {
         group.visible = pose.opacity > .001;
         mesh.material.opacity = pose.opacity;
       },
-      draw() { renderer.render(world, camera); },
+      draw() {
+        for (const surface of surfaces) {
+          const { video, videoTexture, mesh } = surface;
+          if (!video || !surface.group.visible || video.readyState < 2) continue;
+          // Upload decoded video frames directly, without a canvas readback/redraw.
+          if (mesh.material.map !== videoTexture) {
+            mesh.material.map = videoTexture;
+            mesh.material.needsUpdate = true;
+          }
+          const ratio = (CARD_WIDTH * mesh.scale.x) / (CARD_HEIGHT * mesh.scale.y);
+          const sourceRatio = video.videoWidth / video.videoHeight;
+          const repeatX = Math.min(1, ratio / sourceRatio);
+          const repeatY = Math.min(1, sourceRatio / ratio);
+          videoTexture.repeat.set(repeatX, repeatY);
+          videoTexture.offset.set((1 - repeatX) / 2, (1 - repeatY) / 2);
+        }
+        renderer.render(world, camera);
+      },
       hit(x, y) {
         raycaster.setFromCamera(new THREE.Vector2(x, -y), camera);
         const hits = raycaster.intersectObjects(surfaces.filter(s => s.group.visible && s.mesh.material.opacity > .7).map(s => s.mesh));

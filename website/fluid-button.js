@@ -1,7 +1,50 @@
 /* Original lightweight glass shader; the anchor remains the interactive control. */
 (() => {
+  // Desktop Safari and all iOS browsers use WebKit's affected compositor.
+  const agent = navigator.userAgent;
+  const safariCompositor = /AppleWebKit/.test(agent) &&
+    (!/Chrome|Chromium|Edg|OPR|Android/.test(agent) || /iPad|iPhone|iPod/.test(agent));
   document.querySelectorAll('.button--primary, .portfolio-project__preview').forEach(button => {
   const isPreview = button.classList.contains('portfolio-project__preview');
+  // Native transparent gradients avoid WebKit's WebGL alpha/compositing edge.
+  // Keep the light inside the same animated card mask as its image.
+  if (isPreview && safariCompositor) {
+    const light = document.createElement('div');
+    light.className = 'portfolio-project__fluid-surface portfolio-project__css-light';
+    light.setAttribute('aria-hidden', 'true');
+    button.prepend(light);
+    button.classList.add('fluid-button--ready');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    let frame = 0, previous = 0, position = 0, target = 0;
+    function follow(now) {
+      frame = 0;
+      const dt = previous ? Math.min(50, now - previous) : 16;
+      previous = now;
+      position = reduced.matches ? target : position + (target - position) * (1 - Math.exp(-dt / 220));
+      if (Math.abs(target - position) < .01) position = target;
+      light.style.setProperty('--light-offset', `${position.toFixed(3)}%`);
+      if (position !== target && !document.hidden) frame = requestAnimationFrame(follow);
+      else previous = 0;
+    }
+    function wake() { if (!frame) frame = requestAnimationFrame(follow); }
+    function track(event) {
+      if (event.pointerType === 'touch') return;
+      const rect = button.getBoundingClientRect();
+      if (!rect.width) return;
+      // Match the original shader's horizontal tracking along the bottom edge.
+      target = (Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width)) - .5) * 65;
+      wake();
+    }
+    function reset() { target = 0; wake(); }
+    button.addEventListener('pointerenter', track);
+    button.addEventListener('pointermove', track, { passive: true });
+    button.addEventListener('pointerleave', reset);
+    button.addEventListener('pointercancel', reset);
+    window.addEventListener('blur', reset);
+    document.addEventListener('visibilitychange', reset);
+    reduced.addEventListener('change', wake);
+    return;
+  }
   const canvas = document.createElement('canvas');
   canvas.className = isPreview ? 'portfolio-project__fluid-surface' : 'fluid-button__surface';
   canvas.setAttribute('aria-hidden', 'true');
@@ -26,6 +69,8 @@
       uniform float time; uniform float hover; uniform float ripple; uniform float energy;
       uniform float edgePhase; uniform float surfacePadding; uniform float idleMotion;
       uniform float previewSurface;
+      // GLSL power is undefined for negative bases; multiply signed squares explicitly.
+      float square(float x) { return x * x; }
       void main(){
         // Extend the lighting beyond the resting capsule into its liquid edge.
         vec2 p=(uv-.5)*(size+vec2(surfacePadding*2.)); vec2 b=size*.5;
@@ -71,21 +116,21 @@
         float sideWidth=x<center?(.49+.05*activity):(.61+.06*activity);
         float crest=exp(-pow(abs((x-center)/sideWidth),1.8));
         float fold=.014*sin(x*5.+flow*.91)+.009*sin(x*8.-flow*.67);
-        float shoulder=exp(-pow((x+.34+.08*sin(flow*.8))/.34,2.));
+        float shoulder=exp(-square((x+.34+.08*sin(flow*.8))/.34));
         float height=.022+(.27+idle*.045*idlePulse+.085*hover+.05*activity+touch.y*.035+fold)*crest
           +.025*shoulder;
         float haze=exp(-pow(bottom/height,1.4));
         // Long, faint color diffusion reaches upward without lifting the bright base.
-        float veil=exp(-pow((x-center-.05-.05*sin(flow*.52+bottom*2.))/.54,2.)
-          -pow(bottom/(.64+.12*activity),2.));
+        float veil=exp(-square((x-center-.05-.05*sin(flow*.52+bottom*2.))/.54)
+          -square(bottom/(.64+.12*activity)));
         // Overlapping colors blend into the same raised, diffused light surface.
         float colorX=x+bottom*(.22+.09*activity)+.07*sin(flow*.73+bottom*3.);
-        float amber=exp(-pow((colorX+.58+.10*sin(flow*.81))/.30,2.));
-        float green=exp(-pow((colorX+.24+.12*sin(flow*.67+1.))/.28,2.));
-        float cyan=exp(-pow((colorX+.02+.10*sin(flow*.93+2.))/.26,2.));
-        float violet=exp(-pow((colorX-.15+.13*sin(flow*.71+3.))/.29,2.));
-        float pink=exp(-pow((colorX-.34+.11*sin(flow*.88+4.))/.31,2.));
-        float peach=exp(-pow((colorX-.64+.09*sin(flow*.60+5.))/.33,2.));
+        float amber=exp(-square((colorX+.58+.10*sin(flow*.81))/.30));
+        float green=exp(-square((colorX+.24+.12*sin(flow*.67+1.))/.28));
+        float cyan=exp(-square((colorX+.02+.10*sin(flow*.93+2.))/.26));
+        float violet=exp(-square((colorX-.15+.13*sin(flow*.71+3.))/.29));
+        float pink=exp(-square((colorX-.34+.11*sin(flow*.88+4.))/.31));
+        float peach=exp(-square((colorX-.64+.09*sin(flow*.60+5.))/.33));
         vec3 spectrum=(vec3(.67,.51,.20)*amber+vec3(.24,.57,.42)*green
           +vec3(.22,.57,.65)*cyan+vec3(.43,.32,.65)*violet
           +vec3(.65,.31,.49)*pink+vec3(.73,.42,.25)*peach)
@@ -94,7 +139,7 @@
         vec3 color=vec3(.105,.108,.112);
         color+=spectrum*(haze*.92+veil*(.16+.06*activity))*breath;
         // A broad pearly lift joins the colors at the base, never a sharp line.
-        float baseBloom=exp(-pow(bottom/(.085+.025*activity),2.))*exp(-pow((x-center)/.61,2.));
+        float baseBloom=exp(-square(bottom/(.085+.025*activity)))*exp(-square((x-center)/.61));
         color+=mix(spectrum,vec3(.91,.95,.98),.48)*baseBloom*.30;
         // Overlapping, softly warped light volumes dissolve the upper wave into a mesh.
         // Independent slow drift avoids a continuous highlight tracing the silhouette.
@@ -106,14 +151,14 @@
         float pearlY=meshY-(.28+lift+.025*cos(flow*.73));
         float roseY=meshY-(.16+lift+.025*sin(flow*.59));
         // Stretch only the upper shoulders into translucent, feathered shades.
-        float mintCloud=exp(-pow((meshX+.20+.045*sin(flow*.71))/.39,2.)
-          -pow(mintY/(mintY>0.? .35:.20),2.));
-        float pearlCloud=exp(-pow((meshX-.035-.055*sin(flow*.63))/.36,2.)
-          -pow(pearlY/(pearlY>0.? .32:.22),2.));
-        float roseCloud=exp(-pow((meshX-.31+.04*cos(flow*.82))/.43,2.)
-          -pow(roseY/(roseY>0.? .39:.19),2.));
-        float crestHalo=exp(-pow((bottom-height*.76)/.27,2.))
-          *exp(-pow((x-shineCenter)/.55,2.));
+        float mintCloud=exp(-square((meshX+.20+.045*sin(flow*.71))/.39)
+          -square(mintY/(mintY>0.? .35:.20)));
+        float pearlCloud=exp(-square((meshX-.035-.055*sin(flow*.63))/.36)
+          -square(pearlY/(pearlY>0.? .32:.22)));
+        float roseCloud=exp(-square((meshX-.31+.04*cos(flow*.82))/.43)
+          -square(roseY/(roseY>0.? .39:.19)));
+        float crestHalo=exp(-square((bottom-height*.76)/.27))
+          *exp(-square((x-shineCenter)/.55));
         vec3 pearl=mix(spectrum,vec3(.86,.90,.97),.48);
         vec3 meshLight=vec3(.49,.79,.72)*mintCloud*.50
           +pearl*pearlCloud*.64+vec3(.83,.57,.73)*roseCloud*.43;
@@ -121,11 +166,11 @@
         color+=(meshLight*(.25+hover*(.035+.04*energy))
           +pearl*crestHalo*(.065+.02*hover))*shimmer;
         // At a corner, gather the light locally and leave the opposite side dark.
-        float gathered=exp(-pow((x-center)/.68,2.));
+        float gathered=exp(-square((x-center)/.68));
         color=mix(vec3(.105,.108,.112),color,mix(1.,gathered,corner*.92));
         // Soft reflections stay within the fixed, borderless silhouette.
         vec3 glassLight=mix(vec3(.52,.55,.59),min(vec3(1.),spectrum*1.8+vec3(.22)),.68);
-        float surge=exp(-pow((length(p-cursor)-ripple*130.)/9.,2.))*exp(-ripple*3.);
+        float surge=exp(-square((length(p-cursor)-ripple*130.)/9.))*exp(-ripple*3.);
         color+=glassLight*surge*.55;
         float alpha=1.;
         if(previewSurface>.5){
@@ -182,7 +227,7 @@
     if(canvas.width!==renderWidth||canvas.height!==renderHeight) {canvas.width=renderWidth;canvas.height=renderHeight;gl.viewport(0,0,canvas.width,canvas.height);}
     gl.uniform1f(uniforms.surfacePadding,padding);
     gl.uniform1f(uniforms.previewSurface,isPreview?1:0);
-    gl.uniform1f(uniforms.idleMotion,button.closest('.hero') && !still ? 1:0);
+    gl.uniform1f(uniforms.idleMotion,button.closest('.hero, .site-footer__contact') && !still ? 1:0);
     gl.uniform2f(uniforms.size,width,height);gl.uniform2f(uniforms.pointer,cursorX,cursorY);
     gl.uniform1f(uniforms.edgePhase,edgePhase);
     gl.uniform1f(uniforms.time,time);gl.uniform1f(uniforms.hover,pressure);gl.uniform1f(uniforms.ripple,ripple);gl.uniform1f(uniforms.energy,energyAt(hoverTime));
@@ -216,8 +261,7 @@
 
 /* A fixed hit area with a locally deforming liquid surface. */
 (() => {
-  const button = document.querySelector('.hero .button--primary');
-  if (!button) return;
+  document.querySelectorAll('.hero .button--primary, .site-footer__contact .button--primary').forEach(button => {
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const surface = document.createElement('span');
@@ -285,6 +329,7 @@
   document.addEventListener('visibilitychange', restore);
   new ResizeObserver(outline).observe(button);
   outline();
+  });
 })();
 
 /* Local edge pull with a stable project hit area; light and image share the mask. */

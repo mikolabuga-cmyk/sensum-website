@@ -260,3 +260,56 @@
   canvas.addEventListener('webglcontextlost',e => { e.preventDefault(); delete mark.dataset.ready; });
   canvas.addEventListener('webglcontextrestored',() => { program=null; resize(); });
 })();
+
+// Show build first, then cycle the requested words while the footer is visible.
+(() => {
+  const heading = document.querySelector('#footer-heading');
+  const words = heading?.querySelectorAll('.footer-word');
+  if (!words?.length) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const control = document.querySelector('.motion-toggle');
+  let index = 0;
+  let visible = false;
+  let timer;
+  const slot = heading.querySelector('.footer-words');
+  function fitWord() {
+    slot.style.width = words[index].getBoundingClientRect().width + 'px';
+  }
+  words.forEach(word => {
+    const letters = [...word.textContent].map((letter, i) => {
+      const span = document.createElement('span');
+      span.textContent = letter;
+      span.style.setProperty('--i', i);
+      return span;
+    });
+    word.replaceChildren(...letters);
+  });
+  fitWord();
+  document.fonts.ready.then(fitWord);
+  window.addEventListener('resize', fitWord);
+  function cycle() {
+    words[index].dataset.phase = 'out';
+    timer = setTimeout(() => {
+      words[index].classList.remove('is-current');
+      words[index].removeAttribute('data-phase');
+      index = index + 1 < words.length ? index + 1 : 1;
+      words[index].classList.add('is-current');
+      fitWord();
+      words[index].dataset.phase = 'in';
+      timer = setTimeout(cycle, 1880);
+    }, 620);
+  }
+  function sync() {
+    clearTimeout(timer);
+    words[index].removeAttribute('data-phase');
+    if (!visible || document.hidden || reduced.matches || control?.dataset.paused === 'true') return;
+    timer = setTimeout(cycle, index === 0 ? 1500 : 1880);
+  }
+  new IntersectionObserver(entries => {
+    visible = entries[0].isIntersecting;
+    sync();
+  }).observe(heading.closest('.site-footer'));
+  reduced.addEventListener('change', sync);
+  document.addEventListener('visibilitychange', sync);
+  if (control) new MutationObserver(sync).observe(control, { attributes: true, attributeFilter: ['data-paused'] });
+})();

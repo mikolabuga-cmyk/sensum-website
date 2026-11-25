@@ -867,3 +867,40 @@ html[data-contact-style="dots"] .site-header:has(.button--header:focus-visible) 
 .liquid-button__shape { position: absolute; inset: -18px; z-index: -1; pointer-events: none; background: var(--color-control-primary, #1b1c1e); isolation: isolate; }
 .liquid-button__shape .fluid-button__surface { left: 0; top: 0; width: 100%; height: 100%; border-radius: 0; }
 @media (forced-colors: active) { .liquid-button__shape { display: none; } .button--primary.liquid-button { background: ButtonFace; border: 1px solid ButtonText; } }
+
+/* Reference-style vertical text roll, clipped to a single text line. */
+.button.button--email { position: relative; }
+.button .email-reveal {
+  position: relative;
+  display: block;
+  width: 7.5em;
+  height: 1.5em;
+  overflow: hidden;
+  font: inherit;
+  transition: width 620ms cubic-bezier(.22, 1, .36, 1);
+}
+.button--header .email-reveal { width: 3.8em; }
+.email-reveal__label,
+.email-reveal::after {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  transition: transform 560ms cubic-bezier(.22, 1, .36, 1), opacity 340ms ease;
+}
+.email-reveal::after {
+  content: attr(data-email);
+  position: absolute;
+  inset: 0;
+  transform: translateY(calc(100% + 2px));
+  opacity: 0;
+}
+@media (hover: hover) and (pointer: fine) {
+  .button--email:hover .email-reveal { width: 11em; }
+  .button--email:hover .email-reveal__label { transform: translateY(calc(-100% - 2px)); opacity: 0; }
+  .button--email:hover .email-reveal::after { transform: translateY(0); opacity: 1; transition-delay: 70ms; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .button .email-reveal, .email-reveal__label, .email-reveal::after { transition: none; }
+}
