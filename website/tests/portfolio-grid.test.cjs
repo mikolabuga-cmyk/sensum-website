@@ -71,10 +71,13 @@ test('four selected projects keep original links, local previews, and independen
   const section = html.slice(sectionStart, html.indexOf('</section>', sectionStart));
   const columns = section.split(/<div class="portfolio-grid__column /).slice(1);
   assert.deepEqual(columns.map(column => (column.match(/<article /g) || []).length), [2, 2]);
-  assert.deepEqual([...section.matchAll(/references\/(\w+)\.jpg/g)].map(match => match[1]), selected);
+  const previews = [...section.matchAll(/references\/([\w-]+\.jpg)/g)].map(match => match[1]);
+  assert.deepEqual(previews, ['lynx-tablet-sky.jpg', 'poligon-mobile.jpg', 'halden-macbook-grey.jpg', 'orvia-monitor.jpg']);
+  for (const preview of previews) {
+    assert.ok(fs.statSync(`website/assets/portfolio/references/${preview}`).size > 1000);
+  }
   for (const project of projects.filter(project => selected.includes(project.id))) {
     assert.ok(html.includes(`href="${project.url}"`));
-    assert.ok(fs.statSync(`website/assets/portfolio/references/${project.id}.jpg`).size > 1000);
   }
   assert.ok(!html.includes('portfolio-shelf'));
   assert.ok(!html.includes('portfolio-view'));

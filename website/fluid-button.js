@@ -351,7 +351,8 @@
       const dt = Math.min(40, last ? now-last : 16); last = now;
       const ease = 1-Math.exp(-dt/90);
       strength += (target-strength)*ease; x += (tx-x)*ease; y += (ty-y)*ease;
-      const w = preview.clientWidth, h = preview.clientHeight;
+      // Match the image's fractional layout size so the mask cannot expose its backing.
+      const { width: w, height: h } = preview.getBoundingClientRect();
       const r = Math.min(parseFloat(getComputedStyle(preview).borderRadius)||24,w/2,h/2);
       const points = [];
       // Sample each rounded corner and its adjacent straight edge uniformly.

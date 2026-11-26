@@ -7,7 +7,7 @@ function setup({ fine = true, reduced = false } = {}) {
   const events = {}, windowEvents = {};
   const label = { style: { removeProperty(key) { delete this[key]; } } };
   const preview = {
-    dataset: {}, querySelector: () => label,
+    dataset: {}, querySelector: selector => selector === '.portfolio-project__hover' ? label : null,
     getBoundingClientRect: () => ({ left: 100, top: 200, width: 400, height: 225 }),
     addEventListener: (name, callback) => { events[name] = callback; }
   };

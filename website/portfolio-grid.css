@@ -59,6 +59,7 @@
   border-radius: var(--radius-preview);
 }
 .portfolio-grid__column--left > :last-child .portfolio-project__preview { aspect-ratio: 4 / 3; }
+.portfolio-project__preview--tall { aspect-ratio: 40 / 27; } /* 20% taller than 16:9 at the same width. */
 .portfolio-project__image { position: absolute; inset: 0; }
 .portfolio-project__preview img {
   display: block;
@@ -153,6 +154,54 @@
 /* Preserve the full mobile flows inside the existing preview proportions. */
 .portfolio-project__preview img.portfolio-project__screen-preview { object-fit: contain; }
 .portfolio-project__screen-preview--cashee { background: #171716; }
+.portfolio-project__screen-preview--poligon { background: #333c2e; }
+.portfolio-project__video-screen {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 160ms ease-out;
+}
+.portfolio-project__video-screen[data-playing] { opacity: 1; }
+.portfolio-project__video-screen video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.portfolio-project__video-screen--full { inset: 0; }
+.portfolio-project__video-screen--poligon::after,
+.portfolio-project__video-screen--halden::after {
+  content: '';
+  position: absolute;
+  background: #050505;
+}
+.portfolio-project__video-screen--poligon {
+  /* Inner display coordinates in the 4:3 Poligon mockup. */
+  left: 37.8%;
+  top: 17.5%;
+  width: 24.2%;
+  height: 70.3%;
+  border-radius: 17% / 8%;
+}
+.portfolio-project__video-screen--poligon::after {
+  top: 1.7%;
+  left: 34.5%;
+  width: 31%;
+  height: 4%;
+  border-radius: 999px;
+}
+.portfolio-project__video-screen--halden {
+  /* Inner display coordinates after the 16:9 mockup is cropped to 40:27. */
+  left: 11%;
+  top: 15.15%;
+  width: 78%;
+  height: 71%;
+  border-radius: 1.2% 1.2% 0 0 / 2% 2% 0 0;
+}
+.portfolio-project__video-screen--halden video { object-fit: fill; }
+.portfolio-project__video-screen--halden::after {
+  top: 0;
+  left: 44.4%;
+  width: 10.6%;
+  height: 1.8%;
+  border-radius: 0 0 6% 6% / 0 0 45% 45%;
+}
 .portfolio-project__screen-preview--seed { background: #dce5d3; }
 
 
